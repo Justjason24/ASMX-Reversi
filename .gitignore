@@ -1,0 +1,72 @@
+# Node.js / Angular
+node_modules/
+dist/
+tmp/
+out-tsc/
+coverage/
+.angular/
+.env
+.env.*.local
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# .NET Core / ASP.NET
+bin/
+obj/
+*.dll
+*.exe
+*.log
+*.pdb
+*.cache
+*.db
+*.db-shm
+*.db-wal
+*.sdf
+*.suo
+*.user
+*.vspscc
+*.vssscc
+*.ncb
+*.sln.docstates
+*.vs/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Entity Framework
+Migrations/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Publish output
+wwwroot/
+publish/
+
+# Logs
+*.log
+
+# Test results
+TestResults/
+*.trx
+
+# Others
+*.swp
+*.bak
+*.tmp
+*.orig

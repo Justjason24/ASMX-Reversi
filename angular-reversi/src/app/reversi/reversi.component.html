@@ -1,0 +1,29 @@
+<p>reversi works!</p>
+
+<h3>Current player color is: {{activePlayerColor}}</h3>
+
+<table>
+    <tr *ngFor = "let row of tableData; let i = index">
+        <td *ngFor="let cell of row; let j = index"
+            (click)="onCellClick(activePlayerColor, i, j)"
+            > 
+
+            <!-- TODO: validation on the onCellClick() method to ensure that it's a valid eligable move -->
+
+            <div class="board-piece" *ngIf="cell == 'b'">
+                <!-- {{cell}} this displays the data in tabledata -->
+                 <img src="../../assets/black_reversi.png">
+            </div>
+
+            <div class="board-piece" *ngIf="cell == 'w'">
+                <img src="../../assets/white_reversi.png">
+            </div>
+
+            <div class="board-piece" *ngIf="cell == 'e'">
+                <img src="../../assets/eligable_move.png">
+            </div>
+        </td>
+    </tr>
+</table>
+
+<mat-slide-toggle>Slide me</mat-slide-toggle>

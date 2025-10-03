@@ -1,0 +1,21 @@
+tr {
+    background-color: white;
+}
+
+td {
+    border: solid;
+    padding: 10px;
+    width: 170px;
+    height: 170px;
+    background-color: green;
+}
+
+
+table {
+    border-collapse: collapse;
+}
+
+.board-piece {
+    display: flex;
+    justify-content: center;
+}
