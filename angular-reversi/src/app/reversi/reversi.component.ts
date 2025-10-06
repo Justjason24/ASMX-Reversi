@@ -37,6 +37,11 @@ export class ReversiComponent {
   onCellClick(playerColor: any, rowNumber: any, columnNumber: any) {
 
     // TODO: Send this data over to the WebService!!!
+    this.dataService.postMoveData(playerColor, rowNumber, columnNumber, this.tableData.toString() ).subscribe(
+      (data) => {
+        console.log('I got this data back! ', data);
+      }
+    );
 
     // Clicking the top right of the board returns a row = 0 and column = 3 in a 4x4 grid
     this.tableData[rowNumber][columnNumber] = this.activePlayerColor;

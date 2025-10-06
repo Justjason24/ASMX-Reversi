@@ -65,6 +65,10 @@ namespace OldBones
         [WebMethod]
         public string ReversiNextMove(ReversiBoard board)
         {
+            board.FillBoardArray();
+            
+
+
             return "";
         }
     }
