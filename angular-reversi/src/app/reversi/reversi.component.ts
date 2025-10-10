@@ -13,6 +13,7 @@ export class ReversiComponent {
   constructor(public dataService: DataserviceService) {}
 
   activePlayerColor: string = 'w';
+  errorMessage: string = '';
 
   tableData: any[][] = [
     [' ', 'e', ' ', ' '],
@@ -21,25 +22,30 @@ export class ReversiComponent {
     [' ', ' ', 'e', ' ']
   ];
 
-  onCellDummyClick(playerColor: any, rowNumber: any, columnNumber: any) {
+  // onCellDummyClick(playerColor: any, rowNumber: any, columnNumber: any) {
 
-    this.dataService.postDummyData().subscribe(
-      (data) => {
-        console.log('I got this data back! ', data);
-      }
-    );
+  //   this.dataService.postDummyData().subscribe(
+  //     (data) => {
+  //       console.log('I got this data back! ', data);
+  //     }
+  //   );
 
-    console.log('Current Player Color', playerColor)
-    console.log('Row Data:', rowNumber);
-    console.log('Row Index:', columnNumber);
-  }
+  //   console.log('Current Player Color', playerColor)
+  //   console.log('Row Data:', rowNumber);
+  //   console.log('Row Index:', columnNumber);
+  // }
 
   onCellClick(playerColor: any, rowNumber: any, columnNumber: any) {
 
-    // TODO: Send this data over to the WebService!!!
     this.dataService.postMoveData(playerColor, rowNumber, columnNumber, this.tableData.toString() ).subscribe(
       (data) => {
-        console.log('I got this data back! ', data);
+        console.log('I got this data back! ', data); // This can be deleted soon
+
+        var parsedText = this.reallyBadXMLParser(data, "<ReversiNextMoveResult>", "</ReversiNextMoveResult>")
+        if(parsedText?.startsWith("ERROR")){
+          this.errorMessage = parsedText;
+        }
+
       }
     );
 
@@ -54,5 +60,12 @@ export class ReversiComponent {
     console.log('Row Index:', columnNumber);
   }
 
+
+
+  reallyBadXMLParser(str: string, start: string, end: string) {
+    const regex = new RegExp(`${start}(.*?)${end}`);
+    const match = str.match(regex);
+    return match ? match[1] : null;
+  }
   
 }

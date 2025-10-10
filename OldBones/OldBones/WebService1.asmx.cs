@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Services;
 
@@ -66,7 +67,13 @@ namespace OldBones
         public string ReversiNextMove(ReversiBoard board)
         {
             board.FillBoardArray();
-            
+
+            if(board.ErrorMessages.Any())
+            {
+                var sb = new StringBuilder();
+                board.ErrorMessages.ForEach(x => sb.Append(x));
+                return sb.ToString();
+            }
 
 
             return "";

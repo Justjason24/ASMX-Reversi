@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Web;
@@ -14,6 +15,8 @@ namespace OldBones
         public string BoardString { get; set; }
 
         private char[,] Board { get; set; }
+
+        public List<String> ErrorMessages = new List<String>();
 
         public void FillBoardArray()
         {
@@ -35,6 +38,13 @@ namespace OldBones
 
             this.Board = boardData;
 
+            // This shouldn't in theory ever occur since validation is also performed on the front-end
+            if (this.Board[MoveCol, MoveRow] != 'e')
+                ErrorMessages.Add("ERROR: Invalid Move");
+
+            this.Board[MoveCol, MoveRow] = Convert.ToChar(CurrentPlayerColor); // tack in current move to the board array
+
         }
+
     }
 }
