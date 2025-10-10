@@ -46,18 +46,25 @@ export class ReversiComponent {
           this.errorMessage = parsedText;
         }
 
+        else {
+
+          // Clicking the top right of the board returns a row = 0 and column = 3 in a 4x4 grid
+          this.tableData[rowNumber][columnNumber] = this.activePlayerColor;
+          
+          this.activePlayerColor == 'w' ? this.activePlayerColor = 'b' : this.activePlayerColor = 'w'
+
+          console.log(this.tableData);
+          console.log('Stringified version to send to Web Service', this.tableData.toString());
+
+          console.log('Current Player Color', playerColor)
+          console.log('Row Data:', rowNumber);
+          console.log('Row Index:', columnNumber);
+        }
+
       }
     );
 
-    // Clicking the top right of the board returns a row = 0 and column = 3 in a 4x4 grid
-    this.tableData[rowNumber][columnNumber] = this.activePlayerColor;
 
-    console.log(this.tableData);
-    console.log('Stringified version to send to Web Service', this.tableData.toString());
-
-    console.log('Current Player Color', playerColor)
-    console.log('Row Data:', rowNumber);
-    console.log('Row Index:', columnNumber);
   }
 
 
