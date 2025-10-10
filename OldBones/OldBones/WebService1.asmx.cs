@@ -75,6 +75,8 @@ namespace OldBones
                 return sb.ToString();
             }
 
+            board.UpdateBoardPieces();
+
 
             return "";
         }
