@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Web;
 
 namespace OldBones
@@ -53,9 +54,43 @@ namespace OldBones
 
             coordinatesToChange.AddRange(LookLeft());
 
-            Console.WriteLine( );
+            coordinatesToChange = coordinatesToChange.Distinct().ToList();
+
+            foreach(var coordinate in coordinatesToChange)
+            {
+                //if (Convert.ToChar(CurrentPlayerColor) == 'b')
+                //    this.Board[coordinate.Item1, coordinate.Item2] = 'w';
+                //else
+                //    this.Board[coordinate.Item1, coordinate.Item2] = 'b';
+
+                this.Board[coordinate.Item1, coordinate.Item2] = Convert.ToChar(CurrentPlayerColor);
+            }
+
+            Console.WriteLine();
         }
 
+        public void StringifyBoard()
+        {
+            var boardData = new StringBuilder();
+
+            for(int i = 0; i < Math.Sqrt(this.Board.Length);i++)
+            {
+                for(int j = 0; j < Math.Sqrt(this.Board.Length); j++)
+                {
+                    boardData.Append($"{Board[i, j]},");
+                }
+            }
+
+            this.BoardString = boardData.ToString();
+        }
+
+
+        // TODO
+        // I'm going to make 8 methods to look in each direction. Need to factor this later. Easier for now.
+
+        // TODO
+        // Also appears at the surface level that there is a bug where when checking for coordinates to 'flip'. 
+        // I'm not ensuring that the last peg is the current players color. Not going to be found until we go to 8x8 instead of the testing 4x4 board.
         public List<Tuple<int, int>> LookLeft()
         {
             var currentMove = Board[MoveCol, MoveRow];
@@ -76,6 +111,28 @@ namespace OldBones
 
             return coordinatesToChange;
         }
+
+        public List<Tuple<int, int>> LookUp()
+        {
+            var currentMove = Board[MoveCol, MoveRow];
+            var oppositeColor = Convert.ToChar(CurrentPlayerColor) == 'w' ? 'b' : 'w';
+            var startingPoint = MoveRow;
+            var coordinatesToChange = new List<Tuple<int, int>>();
+
+            while (startingPoint >= 0 || startingPoint <= 4)
+            {
+                startingPoint--; // decrement because going up.
+                if (Board[MoveCol, startingPoint] == oppositeColor)
+                {
+                    coordinatesToChange.Add(new Tuple<int, int>(MoveCol, startingPoint));
+                }
+                else
+                    break;
+            }
+
+            return coordinatesToChange;
+        }
+
 
     }
 }

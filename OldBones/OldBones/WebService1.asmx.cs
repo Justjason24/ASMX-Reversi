@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Web;
 using System.Web.Services;
@@ -76,9 +77,9 @@ namespace OldBones
             }
 
             board.UpdateBoardPieces();
+            board.StringifyBoard();
 
-
-            return "";
+            return board.BoardString;
         }
     }
 }
