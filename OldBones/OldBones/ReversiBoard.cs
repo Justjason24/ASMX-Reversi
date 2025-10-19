@@ -34,8 +34,6 @@ namespace OldBones
                 }
             }
 
-            var x = boardData[2, 1];
-
             this.Board = boardData;
 
             // This shouldn't in theory ever occur since validation is also performed on the front-end
@@ -44,7 +42,7 @@ namespace OldBones
             if (this.Board[MoveCol, MoveRow] != 'e')
                 ErrorMessages.Add("ERROR: Invalid Move");
 
-            this.Board[MoveCol, MoveRow] = Convert.ToChar(CurrentPlayerColor); // tack in current move to the board array
+            this.Board[MoveRow, MoveCol] = Convert.ToChar(CurrentPlayerColor); // tack in current move to the board array
 
         }
 
@@ -53,6 +51,7 @@ namespace OldBones
             var coordinatesToChange = new List<Tuple<int, int>>();
 
             coordinatesToChange.AddRange(LookLeft());
+            coordinatesToChange.AddRange(LookUp());
 
             coordinatesToChange = coordinatesToChange.Distinct().ToList();
 
