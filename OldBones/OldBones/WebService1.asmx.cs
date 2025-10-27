@@ -77,6 +77,7 @@ namespace OldBones
             }
 
             board.UpdateBoardPieces();
+            board.MarkEligableMoves();
             board.StringifyBoard();
 
             return board.BoardString;

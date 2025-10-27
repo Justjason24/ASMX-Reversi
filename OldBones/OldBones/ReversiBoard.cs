@@ -46,7 +46,7 @@ namespace OldBones
 
         }
 
-        public void UpdateBoardPieces()
+        public void UpdateBoardPieces() // this either needs a name change or something because I plan on handling finding the eligable moves elsewhere
         {
             var coordinatesToChange = new List<Tuple<int, int>>();
 
@@ -63,6 +63,34 @@ namespace OldBones
                 //    this.Board[coordinate.Item1, coordinate.Item2] = 'b';
 
                 this.Board[coordinate.Item1, coordinate.Item2] = Convert.ToChar(CurrentPlayerColor);
+            }
+
+            Console.WriteLine();
+        }
+
+        public void MarkEligableMoves()
+        {
+            for(int i = 0; i < Math.Sqrt(this.Board.Length); i++)
+            {
+                for(int j = 0; j < Math.Sqrt(this.Board.Length); j++)
+                {
+                    if (Board[i,j] == 'e')
+                    {
+                        Board[i, j] = ' ';
+                    }
+                }
+            }
+
+            var eligableMoveCoordinates = new List<Tuple<int, int>>();
+
+            eligableMoveCoordinates.Add(LookRightForEligableMoves());
+            eligableMoveCoordinates.Add(LookDownForEligableMoves());
+
+            eligableMoveCoordinates = eligableMoveCoordinates.Distinct().ToList();
+
+            foreach(var coordinate in eligableMoveCoordinates)
+            {
+                this.Board[coordinate.Item1, coordinate.Item2] = 'e';
             }
 
             Console.WriteLine();
@@ -90,6 +118,8 @@ namespace OldBones
         // TODO
         // Also appears at the surface level that there is a bug where when checking for coordinates to 'flip'. 
         // I'm not ensuring that the last peg is the current players color. Not going to be found until we go to 8x8 instead of the testing 4x4 board.
+
+        #region Flipping pebbles after a move was made
         public List<Tuple<int, int>> LookLeft()
         {
             var currentMove = Board[MoveCol, MoveRow];
@@ -131,7 +161,77 @@ namespace OldBones
 
             return coordinatesToChange;
         }
+        #endregion
 
+        #region Finding elible moves
+        public Tuple<int, int> LookRightForEligableMoves()
+        {
+            var eligableMoveCoordinates = new List<Tuple<int, int>>();
+
+            var currentPieceRow = 1;
+            var currentPieceColumn = 1;
+
+
+            var startingPoint = currentPieceColumn; // this will need to change to use the column value of the pieces we're checking
+
+            // NOTES
+            // white just went - so I'm now looking at black pieces
+            // a black pebble remains on 1,1. The elgiable piece would be 1,3
+
+            if (Board[currentPieceRow, startingPoint + 1] != Convert.ToChar(CurrentPlayerColor))
+            {
+                return new Tuple<int, int>(-1, -1);
+            }
+
+
+            while (startingPoint < Math.Sqrt(this.Board.Length))
+            {
+
+                if (Board[currentPieceRow, startingPoint] == ' ')
+                    return new Tuple<int, int>(currentPieceRow, startingPoint);
+
+                startingPoint++;
+
+            }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
+        public Tuple<int, int> LookDownForEligableMoves()
+        {
+            var eligableMoveCoordinates = new List<Tuple<int, int>>();
+
+            var currentPieceRow = 1;
+            var currentPieceColumn = 1;
+
+
+            var startingPoint = currentPieceRow; // this will need to change to use the column value of the pieces we're checking
+
+            // NOTES
+            // white just went - so I'm now looking at black pieces
+            // a black pebble remains on 1,1. The elgiable piece would be 1,3
+
+            if (Board[startingPoint + 1, currentPieceColumn] != Convert.ToChar(CurrentPlayerColor))
+            {
+                return new Tuple<int, int>(-1, -1);
+            }
+
+
+            while (startingPoint < Math.Sqrt(this.Board.Length))
+            {
+
+                if (Board[startingPoint, currentPieceColumn] == ' ')
+                    return new Tuple<int, int>(startingPoint, currentPieceColumn);
+
+                startingPoint++;
+
+            }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
+
+        #endregion
 
     }
 }
