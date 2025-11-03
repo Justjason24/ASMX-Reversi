@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataserviceService } from '../services/dataservice.service';
 
 
@@ -8,7 +8,7 @@ import { DataserviceService } from '../services/dataservice.service';
   templateUrl: './reversi.component.html',
   styleUrls: ['./reversi.component.css']
 })
-export class ReversiComponent {
+export class ReversiComponent implements OnInit {
 
   constructor(public dataService: DataserviceService) {}
 
@@ -22,18 +22,13 @@ export class ReversiComponent {
     [' ', ' ', 'e', ' ']
   ];
 
-  // onCellDummyClick(playerColor: any, rowNumber: any, columnNumber: any) {
+  ngOnInit() {
+      // this.dataService.postDummyData().subscribe(x => {
+      //   console.log(x);
+      // });
+      console.log("test area");
+  }
 
-  //   this.dataService.postDummyData().subscribe(
-  //     (data) => {
-  //       console.log('I got this data back! ', data);
-  //     }
-  //   );
-
-  //   console.log('Current Player Color', playerColor)
-  //   console.log('Row Data:', rowNumber);
-  //   console.log('Row Index:', columnNumber);
-  // }
 
   onCellClick(playerColor: any, rowNumber: any, columnNumber: any) {
 
@@ -105,5 +100,18 @@ export class ReversiComponent {
       return result;
 
   }
+
+  // onCellDummyClick(playerColor: any, rowNumber: any, columnNumber: any) {
+
+  //   this.dataService.postDummyData().subscribe(
+  //     (data) => {
+  //       console.log('I got this data back! ', data);
+  //     }
+  //   );
+
+  //   console.log('Current Player Color', playerColor)
+  //   console.log('Row Data:', rowNumber);
+  //   console.log('Row Index:', columnNumber);
+  // }
   
 }

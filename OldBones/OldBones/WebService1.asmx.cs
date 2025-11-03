@@ -18,35 +18,32 @@ namespace OldBones
     [System.Web.Script.Services.ScriptService]
     public class WebService1 : System.Web.Services.WebService
     {
-        int globalCount = 1;
-
         public WebService1()
         {
 
             // Add CORS headers for every request
-            HttpContext context = HttpContext.Current;
-            if (context != null)
-            {
-                //context.Response.AddHeader("Access-Control-Allow-Origin", "*");
-                context.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
-                context.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            //HttpContext context = HttpContext.Current;
+            //if (context != null)
+            //{
+            //    //context.Response.AddHeader("Access-Control-Allow-Origin", "*");
+            //    context.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+            //    context.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
 
-                // Handle OPTIONS request
-                if (context.Request.HttpMethod == "OPTIONS")
-                {
-                    context.Response.StatusCode = 200;
-                    context.Response.End();
-                }
-            }
+            //    // Handle OPTIONS request
+            //    if (context.Request.HttpMethod == "OPTIONS")
+            //    {
+            //        context.Response.StatusCode = 200;
+            //        context.Response.End();
+            //    }
+            //}
 
         }
 
 
         [WebMethod]
         public string HelloWorld()
-        {
-            globalCount++;
-            return $"{globalCount}";
+        {    
+            return "Hello World. I responded from an ASMX application! ";
         }
 
         [WebMethod]

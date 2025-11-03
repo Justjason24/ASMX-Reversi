@@ -87,6 +87,9 @@ namespace OldBones
             eligableMoveCoordinates.Add(LookDownForEligableMoves());
 
             eligableMoveCoordinates = eligableMoveCoordinates.Distinct().ToList();
+            
+            // TODO - remove the -1 and -1 
+
 
             foreach(var coordinate in eligableMoveCoordinates)
             {
