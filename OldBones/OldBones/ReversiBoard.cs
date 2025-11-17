@@ -52,6 +52,7 @@ namespace OldBones
 
             coordinatesToChange.AddRange(LookLeft());
             coordinatesToChange.AddRange(LookUp());
+            coordinatesToChange.AddRange(LookRight());
 
             coordinatesToChange = coordinatesToChange.Distinct().ToList();
 
@@ -87,9 +88,9 @@ namespace OldBones
             eligableMoveCoordinates.Add(LookDownForEligableMoves());
 
             eligableMoveCoordinates = eligableMoveCoordinates.Distinct().ToList();
-            
-            // TODO - remove the -1 and -1 
 
+            // TODO - remove the -1 and -1 
+            eligableMoveCoordinates = eligableMoveCoordinates.Where(x => x.Item1 != -1 && x.Item2 != -1).ToList();
 
             foreach(var coordinate in eligableMoveCoordinates)
             {
@@ -135,7 +136,7 @@ namespace OldBones
                 startingPoint--;
                 if (Board[startingPoint, MoveRow] == oppositeColor)
                 {
-                    coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveRow));
+                    coordinatesToChange.Add(new Tuple<int, int>(MoveRow, startingPoint));
                 }
                 else
                     break;
@@ -162,6 +163,30 @@ namespace OldBones
                     break;
             }
 
+            return coordinatesToChange;
+        }
+
+        public List<Tuple<int, int>> LookRight()
+        {
+
+            var currentMove = Board[MoveCol, MoveRow];
+            var oppositeColor = Convert.ToChar(CurrentPlayerColor) == 'w' ? 'b' : 'w';
+            var startingPoint = MoveCol;
+            var coordinatesToChange = new List<Tuple<int, int>>();
+
+            if(MoveCol < 3) // dont need to look right if I'm already on the right side of the board. Also, dont use a magic number. 3 only works for 4x4 board
+            {
+                while (startingPoint >= 0 && startingPoint <= 4)
+                {
+                    startingPoint++;
+                    if (Board[startingPoint, MoveRow] == oppositeColor)
+                    {
+                        coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveRow));
+                    }
+                    else
+                        break;
+                }
+            }
             return coordinatesToChange;
         }
         #endregion
