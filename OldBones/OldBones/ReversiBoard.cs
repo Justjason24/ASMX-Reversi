@@ -126,42 +126,50 @@ namespace OldBones
         #region Flipping pebbles after a move was made
         public List<Tuple<int, int>> LookLeft()
         {
-            var currentMove = Board[MoveCol, MoveRow];
+            var currentMove = Board[MoveRow, MoveCol];
             var oppositeColor = Convert.ToChar(CurrentPlayerColor) == 'w' ? 'b' : 'w';
             var startingPoint = MoveCol;
             var coordinatesToChange = new List<Tuple<int, int>>();
 
-            while(startingPoint >= 0 || startingPoint <= 4)
+            if(MoveCol > 0) // dont need to look left if I'm already on the left side of the board. 
             {
-                startingPoint--;
-                if (Board[startingPoint, MoveRow] == oppositeColor)
+                while (startingPoint >= 0 || startingPoint <= 4)
                 {
-                    coordinatesToChange.Add(new Tuple<int, int>(MoveRow, startingPoint));
+                    startingPoint--;
+                    if (Board[startingPoint, MoveRow] == oppositeColor)
+                    {
+                        coordinatesToChange.Add(new Tuple<int, int>(MoveRow, startingPoint));
+                    }
+                    else
+                        break;
                 }
-                else
-                    break;
             }
+
 
             return coordinatesToChange;
         }
 
         public List<Tuple<int, int>> LookUp()
         {
-            var currentMove = Board[MoveCol, MoveRow];
+            var currentMove = Board[MoveRow, MoveCol];
             var oppositeColor = Convert.ToChar(CurrentPlayerColor) == 'w' ? 'b' : 'w';
             var startingPoint = MoveRow;
             var coordinatesToChange = new List<Tuple<int, int>>();
 
-            while (startingPoint >= 0 || startingPoint <= 4)
+            if(MoveRow > 0)
             {
-                startingPoint--; // decrement because going up.
-                if (Board[MoveCol, startingPoint] == oppositeColor)
+                while (startingPoint >= 0 || startingPoint <= 4)
                 {
-                    coordinatesToChange.Add(new Tuple<int, int>(MoveCol, startingPoint));
+                    startingPoint--; // decrement because going up.
+                    if (Board[startingPoint, MoveCol] == oppositeColor)
+                    {
+                        coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveCol));
+                    }
+                    else
+                        break;
                 }
-                else
-                    break;
             }
+
 
             return coordinatesToChange;
         }
@@ -169,7 +177,7 @@ namespace OldBones
         public List<Tuple<int, int>> LookRight()
         {
 
-            var currentMove = Board[MoveCol, MoveRow];
+            var currentMove = Board[MoveRow, MoveCol];
             var oppositeColor = Convert.ToChar(CurrentPlayerColor) == 'w' ? 'b' : 'w';
             var startingPoint = MoveCol;
             var coordinatesToChange = new List<Tuple<int, int>>();
@@ -179,9 +187,9 @@ namespace OldBones
                 while (startingPoint >= 0 && startingPoint <= 4)
                 {
                     startingPoint++;
-                    if (Board[startingPoint, MoveRow] == oppositeColor)
+                    if (Board[MoveRow, startingPoint] == oppositeColor)
                     {
-                        coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveRow));
+                        coordinatesToChange.Add(new Tuple<int, int>(MoveRow, startingPoint));
                     }
                     else
                         break;
