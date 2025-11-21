@@ -110,7 +110,8 @@ namespace OldBones
             // TODO - optimize this. This could potentially be dozens of pebbles - each pebble calling 8 seek functions
             foreach(var oppositePebblePosition in allOppositePebblesPositions)
             {
-                eligableMoveCoordinates.Add(LookUpForEligableMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                eligableMoveCoordinates.Add(LookUpForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                eligableMoveCoordinates.Add(LookLeftForEligibleMove(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
             }
 
             eligableMoveCoordinates = eligableMoveCoordinates.Distinct().ToList();
@@ -292,12 +293,9 @@ namespace OldBones
             return new Tuple<int, int>(-1, -1);
         }
 
-        public Tuple<int, int>LookUpForEligableMoves(int row, int column)
+        public Tuple<int, int> LookUpForEligibleMoves(int row, int column)
         {
-            // I need to decrement the row index.
-            // Say I'm starting at 2,2. I will then go to 1,2 and then 0,2
 
-            // make sure that the piece after is opposite color
             if (Board[row - 1, column] != Convert.ToChar(CurrentPlayerColor))
             {
                 return new Tuple<int, int>(-1, -1);
@@ -309,6 +307,24 @@ namespace OldBones
                     return new Tuple<int, int>(row, column);
 
                 row--;
+            }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
+        public Tuple<int, int> LookLeftForEligibleMove(int row, int column)
+        {
+            if (Board[row, column - 1] != Convert.ToChar(CurrentPlayerColor))
+            {
+                return new Tuple<int, int>(-1, -1);
+            }
+
+            while (column >= 0)
+            {
+                if (Board[row, column] == ' ')
+                    return new Tuple<int, int>(row, column);
+
+                column--;
             }
 
             return new Tuple<int, int>(-1, -1);
