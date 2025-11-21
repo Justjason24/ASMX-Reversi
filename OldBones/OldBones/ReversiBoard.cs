@@ -69,7 +69,7 @@ namespace OldBones
             Console.WriteLine();
         }
 
-        public void MarkEligableMoves()
+        public void MarkEligibleMoves()
         {
             //TODO - playing first move at [1,0] does not give correct eligable moves
 
@@ -85,12 +85,7 @@ namespace OldBones
                 }
             }
 
-            var eligableMoveCoordinates = new List<Tuple<int, int>>();
 
-
-
-            //eligableMoveCoordinates.Add(LookRightForEligableMoves());
-            //eligableMoveCoordinates.Add(LookDownForEligableMoves());
 
             // Get all positions of opposite colors and add them to a list
             var allOppositePebblesPositions = new List<Tuple<int, int>>();
@@ -108,18 +103,21 @@ namespace OldBones
 
             // iterate over all opposite player colors and look in all directions for eligable moves. 
             // TODO - optimize this. This could potentially be dozens of pebbles - each pebble calling 8 seek functions
-            foreach(var oppositePebblePosition in allOppositePebblesPositions)
+            var eligibleMoveCoordinates = new List<Tuple<int, int>>();
+            foreach (var oppositePebblePosition in allOppositePebblesPositions)
             {
-                eligableMoveCoordinates.Add(LookUpForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
-                eligableMoveCoordinates.Add(LookLeftForEligibleMove(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                eligibleMoveCoordinates.Add(LookUpForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                eligibleMoveCoordinates.Add(LookLeftForEligibleMove(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+
+                eligibleMoveCoordinates.Add(LookTopLeftForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
             }
 
-            eligableMoveCoordinates = eligableMoveCoordinates.Distinct().ToList();
+            eligibleMoveCoordinates = eligibleMoveCoordinates.Distinct().ToList();
 
            
-            eligableMoveCoordinates = eligableMoveCoordinates.Where(x => x.Item1 != -1 && x.Item2 != -1).ToList();
+            eligibleMoveCoordinates = eligibleMoveCoordinates.Where(x => x.Item1 != -1 && x.Item2 != -1).ToList();
 
-            foreach(var coordinate in eligableMoveCoordinates)
+            foreach(var coordinate in eligibleMoveCoordinates)
             {
                 this.Board[coordinate.Item1, coordinate.Item2] = 'e';
             }
@@ -295,6 +293,8 @@ namespace OldBones
 
         public Tuple<int, int> LookUpForEligibleMoves(int row, int column)
         {
+            if (row - 1 < 0)
+                return new Tuple<int, int>(-1, -1);
 
             if (Board[row - 1, column] != Convert.ToChar(CurrentPlayerColor))
             {
@@ -314,6 +314,9 @@ namespace OldBones
 
         public Tuple<int, int> LookLeftForEligibleMove(int row, int column)
         {
+            if(column - 1 < 0)
+                return new Tuple<int, int>(-1, -1);
+
             if (Board[row, column - 1] != Convert.ToChar(CurrentPlayerColor))
             {
                 return new Tuple<int, int>(-1, -1);
@@ -324,6 +327,29 @@ namespace OldBones
                 if (Board[row, column] == ' ')
                     return new Tuple<int, int>(row, column);
 
+                column--;
+            }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
+        public Tuple<int, int> LookTopLeftForEligibleMoves(int row, int column)
+        {
+            // Need to make sure we're within bound so we don't access an invalid coordinate in the Board matrix
+            if (row - 1 < 0 || column - 1 < 0)
+                return new Tuple<int, int>(-1, -1);
+
+            if (Board[row - 1, column - 1] != Convert.ToChar(CurrentPlayerColor))
+            {
+                return new Tuple<int, int>(-1, -1);
+            }
+
+            while (row >= 0 && column >= 0)
+            {
+                if (Board[row, column] == ' ')
+                    return new Tuple<int, int>(row, column);
+
+                row--;
                 column--;
             }
 
