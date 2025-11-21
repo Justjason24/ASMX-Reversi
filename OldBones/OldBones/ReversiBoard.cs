@@ -71,6 +71,9 @@ namespace OldBones
 
         public void MarkEligableMoves()
         {
+            //TODO - playing first move at [1,0] does not give correct eligable moves
+
+            // remove eligable moves from previous move so we can recalculate
             for(int i = 0; i < Math.Sqrt(this.Board.Length); i++)
             {
                 for(int j = 0; j < Math.Sqrt(this.Board.Length); j++)
@@ -84,12 +87,35 @@ namespace OldBones
 
             var eligableMoveCoordinates = new List<Tuple<int, int>>();
 
-            eligableMoveCoordinates.Add(LookRightForEligableMoves());
-            eligableMoveCoordinates.Add(LookDownForEligableMoves());
+
+
+            //eligableMoveCoordinates.Add(LookRightForEligableMoves());
+            //eligableMoveCoordinates.Add(LookDownForEligableMoves());
+
+            // Get all positions of opposite colors and add them to a list
+            var allOppositePebblesPositions = new List<Tuple<int, int>>();
+            var oppositeColor = GetOppositePlayerColor();
+            for (int i = 0; i < Math.Sqrt(this.Board.Length); i++)
+            {
+                for (int j = 0; j < Math.Sqrt(this.Board.Length); j++)
+                {
+                    if (Board[i, j] == oppositeColor)
+                    {
+                        allOppositePebblesPositions.Add(new Tuple<int, int>(i, j));
+                    }
+                }
+            }
+
+            // iterate over all opposite player colors and look in all directions for eligable moves. 
+            // TODO - optimize this. This could potentially be dozens of pebbles - each pebble calling 8 seek functions
+            foreach(var oppositePebblePosition in allOppositePebblesPositions)
+            {
+                eligableMoveCoordinates.Add(LookUpForEligableMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+            }
 
             eligableMoveCoordinates = eligableMoveCoordinates.Distinct().ToList();
 
-            // TODO - remove the -1 and -1 
+           
             eligableMoveCoordinates = eligableMoveCoordinates.Where(x => x.Item1 != -1 && x.Item2 != -1).ToList();
 
             foreach(var coordinate in eligableMoveCoordinates)
@@ -266,8 +292,39 @@ namespace OldBones
             return new Tuple<int, int>(-1, -1);
         }
 
+        public Tuple<int, int>LookUpForEligableMoves(int row, int column)
+        {
+            // I need to decrement the row index.
+            // Say I'm starting at 2,2. I will then go to 1,2 and then 0,2
+
+            // make sure that the piece after is opposite color
+            if (Board[row - 1, column] != Convert.ToChar(CurrentPlayerColor))
+            {
+                return new Tuple<int, int>(-1, -1);
+            }
+
+            while(row >= 0)
+            {
+                if (Board[row, column] == ' ')
+                    return new Tuple<int, int>(row, column);
+
+                row--;
+            }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
 
         #endregion
+
+        public char GetOppositePlayerColor()
+        {
+            if (CurrentPlayerColor == "w")
+                return 'b';
+            else
+                return 'w';
+
+        }
 
     }
 }
