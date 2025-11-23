@@ -19,6 +19,12 @@ namespace OldBones
         public List<String> ErrorMessages = new List<String>();
 
 
+        /// <summary>
+        ///     From our front-end we get a comma delimitted string of the board, but NOT inlcuding the current players move.
+        ///     We get the current players move in the values MoveRow and MoveCol.
+        ///     This method fills in our matrix from that board string and also tacks in the current move after filling in the board string. 
+        ///     We also kick back an error if the selected move wasn't eligible
+        /// </summary>
         public void FillBoardArray()
         {
             var boardArray = this.BoardString.Split(',').ToArray();
@@ -37,10 +43,7 @@ namespace OldBones
 
             this.Board = boardData;
 
-            // This shouldn't in theory ever occur since validation is also performed on the front-end
-            // TODO - make this a method... and probably should do additional validation like looking at adjacent reversi pebbles
-            // to determine if the move was valid.
-            if (this.Board[MoveCol, MoveRow] != 'e')
+            if (this.Board[MoveRow, MoveCol] != 'e')
                 ErrorMessages.Add("ERROR: Invalid Move");
 
             this.Board[MoveRow, MoveCol] = Convert.ToChar(CurrentPlayerColor); // tack in current move to the board array
@@ -113,6 +116,7 @@ namespace OldBones
 
                 eligibleMoveCoordinates.Add(LookTopLeftForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
                 eligibleMoveCoordinates.Add(LookDownRightForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                eligibleMoveCoordinates.Add(LookDownLeftForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
             }
 
             eligibleMoveCoordinates = eligibleMoveCoordinates.Distinct().ToList();
@@ -210,7 +214,7 @@ namespace OldBones
             var boardLength = GetBoardSideLength();
             var coordinatesToChange = new List<Tuple<int, int>>();
 
-            if(MoveRow < boardLength)
+            if(MoveRow < boardLength - 1)
             {
                 while(startingPoint >= 0 && startingPoint < boardLength)
                 {
@@ -229,15 +233,15 @@ namespace OldBones
 
         public List<Tuple<int, int>> LookRight()
         {
-
             var currentMove = Board[MoveRow, MoveCol];
             var oppositeColor = GetOppositePlayerColor();
             var startingPoint = MoveCol;
+            var boardLength = GetBoardSideLength();
             var coordinatesToChange = new List<Tuple<int, int>>();
 
-            if(MoveCol < 3) // dont need to look right if I'm already on the right side of the board. Also, dont use a magic number. 3 only works for 4x4 board
+            if(MoveCol < boardLength - 1) 
             {
-                while (startingPoint >= 0 && startingPoint <= 4)
+                while (startingPoint >= 0 && startingPoint <= boardLength)
                 {
                     startingPoint++;
                     if (Board[MoveRow, startingPoint] == oppositeColor)
@@ -370,7 +374,7 @@ namespace OldBones
 
         public Tuple<int, int>LookDownRightForEligibleMoves(int row, int column)
         {
-            var boardLength = Math.Sqrt(this.Board.Length);
+            var boardLength = GetBoardSideLength();
 
             if (row + 1 >= boardLength || column + 1 >= boardLength)
                 return new Tuple<int, int>(-1, -1);
@@ -388,6 +392,29 @@ namespace OldBones
                 row++;
                 column++;
                    
+            }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
+        public Tuple<int, int> LookDownLeftForEligibleMoves(int row, int column)
+        {
+            //row increase, column decreaes for bottom left
+            var boardLength = GetBoardSideLength();
+
+            if (row + 1 >= boardLength || column - 1 < 0)
+                return new Tuple<int, int>(-1, -1);
+
+            if (Board[row + 1, column - 1] != Convert.ToChar(CurrentPlayerColor))
+                return new Tuple<int, int>(-1, -1);
+
+            while(row < boardLength && column >= 0)
+            {
+                if (Board[row, column] == ' ')
+                    return new Tuple<int, int>(row, column);
+
+                row++;
+                column--;
             }
 
             return new Tuple<int, int>(-1, -1);
