@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 using System.Text;
 using System.Web;
 
@@ -53,6 +54,7 @@ namespace OldBones
             coordinatesToChange.AddRange(LookLeft());
             coordinatesToChange.AddRange(LookUp());
             coordinatesToChange.AddRange(LookRight());
+            coordinatesToChange.AddRange(LookDown());
 
             coordinatesToChange = coordinatesToChange.Distinct().ToList();
 
@@ -71,8 +73,6 @@ namespace OldBones
 
         public void MarkEligibleMoves()
         {
-            //TODO - playing first move at [1,0] does not give correct eligable moves
-
             // remove eligable moves from previous move so we can recalculate
             for(int i = 0; i < Math.Sqrt(this.Board.Length); i++)
             {
@@ -112,6 +112,7 @@ namespace OldBones
                 eligibleMoveCoordinates.Add(LookRightForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
 
                 eligibleMoveCoordinates.Add(LookTopLeftForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                eligibleMoveCoordinates.Add(LookDownRightForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
             }
 
             eligibleMoveCoordinates = eligibleMoveCoordinates.Distinct().ToList();
@@ -179,7 +180,7 @@ namespace OldBones
         public List<Tuple<int, int>> LookUp()
         {
             var currentMove = Board[MoveRow, MoveCol];
-            var oppositeColor = Convert.ToChar(CurrentPlayerColor) == 'w' ? 'b' : 'w';
+            var oppositeColor = GetOppositePlayerColor();
             var startingPoint = MoveRow;
             var coordinatesToChange = new List<Tuple<int, int>>();
 
@@ -201,11 +202,36 @@ namespace OldBones
             return coordinatesToChange;
         }
 
+        public List<Tuple<int, int>> LookDown()
+        {
+            var currentMove = Board[MoveRow, MoveCol];
+            var oppositeColor = GetOppositePlayerColor();
+            var startingPoint = MoveRow;
+            var boardLength = GetBoardSideLength();
+            var coordinatesToChange = new List<Tuple<int, int>>();
+
+            if(MoveRow < boardLength)
+            {
+                while(startingPoint >= 0 && startingPoint < boardLength)
+                {
+                    startingPoint++;
+                    if (Board[startingPoint, MoveCol] == oppositeColor)
+                    {
+                        coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveCol));
+                    }
+                    else
+                        break;
+                }
+            }
+
+            return coordinatesToChange;
+        }
+
         public List<Tuple<int, int>> LookRight()
         {
 
             var currentMove = Board[MoveRow, MoveCol];
-            var oppositeColor = Convert.ToChar(CurrentPlayerColor) == 'w' ? 'b' : 'w';
+            var oppositeColor = GetOppositePlayerColor();
             var startingPoint = MoveCol;
             var coordinatesToChange = new List<Tuple<int, int>>();
 
@@ -342,6 +368,31 @@ namespace OldBones
             return new Tuple<int, int>(-1, -1);
         }
 
+        public Tuple<int, int>LookDownRightForEligibleMoves(int row, int column)
+        {
+            var boardLength = Math.Sqrt(this.Board.Length);
+
+            if (row + 1 >= boardLength || column + 1 >= boardLength)
+                return new Tuple<int, int>(-1, -1);
+
+            if (Board[row + 1, column + 1] != Convert.ToChar(CurrentPlayerColor))
+            {
+                return new Tuple<int, int>(-1, -1);
+            }
+
+            while(row < boardLength && column < boardLength)
+            {
+                if (Board[row, column] == ' ')
+                    return new Tuple<int, int>(row, column);
+
+                row++;
+                column++;
+                   
+            }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
 
         #endregion
 
@@ -354,5 +405,9 @@ namespace OldBones
 
         }
 
+        public double GetBoardSideLength()
+        {
+            return Math.Sqrt(this.Board.Length);
+        }
     }
 }
