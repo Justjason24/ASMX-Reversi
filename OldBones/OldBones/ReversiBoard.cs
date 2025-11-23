@@ -108,6 +108,8 @@ namespace OldBones
             {
                 eligibleMoveCoordinates.Add(LookUpForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
                 eligibleMoveCoordinates.Add(LookLeftForEligibleMove(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                eligibleMoveCoordinates.Add(LookDownForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                eligibleMoveCoordinates.Add(LookRightForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
 
                 eligibleMoveCoordinates.Add(LookTopLeftForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
             }
@@ -225,68 +227,29 @@ namespace OldBones
         #endregion
 
         #region Finding elible moves
-        public Tuple<int, int> LookRightForEligableMoves()
+        public Tuple<int, int> LookRightForEligibleMoves(int row, int column)
         {
-            var eligableMoveCoordinates = new List<Tuple<int, int>>();
+            var boardLength = Math.Sqrt(this.Board.Length);
 
-            var currentPieceRow = 1;
-            var currentPieceColumn = 1;
+            // NOTES: We check if the square we're about to check is in bound. Since I'm about to do a comparison I need to check so I don't get an OOB error.
+            if(column + 1 >= boardLength)
+                return new Tuple<int, int>(-1, -1);
 
-
-            var startingPoint = currentPieceColumn; // this will need to change to use the column value of the pieces we're checking
-
-            // NOTES
-            // white just went - so I'm now looking at black pieces
-            // a black pebble remains on 1,1. The elgiable piece would be 1,3
-
-            if (Board[currentPieceRow, startingPoint + 1] != Convert.ToChar(CurrentPlayerColor))
+            // NOTES: At this point, all of the current's player colors pebbles have been set. Therefore, we are now looking at eligible moves for the opposite colors.
+            // NOTES cont: That is why we see if the piece next to the opposite pebble is the current color so we can mark the space past it eligible.
+            if (Board[row, column + 1] != Convert.ToChar(CurrentPlayerColor))
             {
                 return new Tuple<int, int>(-1, -1);
             }
 
-
-            while (startingPoint < Math.Sqrt(this.Board.Length))
+            while(column < boardLength)
             {
+                if (Board[row, column] == ' ')
+                    return new Tuple<int, int>(row, column);
 
-                if (Board[currentPieceRow, startingPoint] == ' ')
-                    return new Tuple<int, int>(currentPieceRow, startingPoint);
-
-                startingPoint++;
-
+                column++;
             }
 
-            return new Tuple<int, int>(-1, -1);
-        }
-
-        public Tuple<int, int> LookDownForEligableMoves()
-        {
-            var eligableMoveCoordinates = new List<Tuple<int, int>>();
-
-            var currentPieceRow = 1;
-            var currentPieceColumn = 1;
-
-
-            var startingPoint = currentPieceRow; // this will need to change to use the column value of the pieces we're checking
-
-            // NOTES
-            // white just went - so I'm now looking at black pieces
-            // a black pebble remains on 1,1. The elgiable piece would be 1,3
-
-            if (Board[startingPoint + 1, currentPieceColumn] != Convert.ToChar(CurrentPlayerColor))
-            {
-                return new Tuple<int, int>(-1, -1);
-            }
-
-
-            while (startingPoint < Math.Sqrt(this.Board.Length))
-            {
-
-                if (Board[startingPoint, currentPieceColumn] == ' ')
-                    return new Tuple<int, int>(startingPoint, currentPieceColumn);
-
-                startingPoint++;
-
-            }
 
             return new Tuple<int, int>(-1, -1);
         }
@@ -307,6 +270,29 @@ namespace OldBones
                     return new Tuple<int, int>(row, column);
 
                 row--;
+            }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
+        public Tuple<int, int> LookDownForEligibleMoves(int row, int column)
+        {
+            var boardLength = Math.Sqrt(this.Board.Length); 
+
+            if(row + 1 >= boardLength)
+                return new Tuple<int, int>(-1, -1);
+
+            if (Board[row + 1, column] != Convert.ToChar(CurrentPlayerColor))
+            {
+                return new Tuple<int, int>(-1, -1);
+            }
+
+            while(row < boardLength)
+            {
+                if (Board[row, column] == ' ')
+                    return new Tuple<int, int>(row, column);
+
+                row++;
             }
 
             return new Tuple<int, int>(-1, -1);
