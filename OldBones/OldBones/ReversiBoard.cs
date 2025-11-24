@@ -54,10 +54,28 @@ namespace OldBones
         {
             var coordinatesToChange = new List<Tuple<int, int>>();
 
+            var debugTuple = new Tuple<int, int>(2, 3);
+
             coordinatesToChange.AddRange(LookLeft());
+            if(coordinatesToChange.Contains(debugTuple))
+                Console.WriteLine();
+            
             coordinatesToChange.AddRange(LookUp());
+            if(coordinatesToChange.Contains(debugTuple))
+                Console.WriteLine();
+
             coordinatesToChange.AddRange(LookRight());
+            if(coordinatesToChange.Contains(debugTuple))
+                Console.WriteLine( );
+
             coordinatesToChange.AddRange(LookDown());
+            if(coordinatesToChange.Contains(debugTuple))
+                Console.WriteLine();
+
+            coordinatesToChange.AddRange(LookTopLeft());
+            if(coordinatesToChange.Contains(debugTuple))
+                Console.WriteLine();
+
 
             coordinatesToChange = coordinatesToChange.Distinct().ToList();
 
@@ -163,28 +181,12 @@ namespace OldBones
             var startingPoint = MoveCol;
             var coordinatesToChange = new List<Tuple<int, int>>();
 
-            //if(MoveCol > 0) // dont need to look left if I'm already on the left side of the board. 
-            //{
-            //    while (startingPoint >= 0 || startingPoint <= 4)
-            //    {
-            //        startingPoint--;
-            //        if (Board[MoveRow, startingPoint] == oppositeColor)
-            //        {
-            //            coordinatesToChange.Add(new Tuple<int, int>(MoveRow, startingPoint));
-            //        }
-            //        if (Board[MoveRow, startingPoint] == Convert.ToChar(CurrentPlayerColor))
-            //        {
-            //            return coordinatesToChange;
-            //        }
-                    
-            //    }
-            //}
 
             if(MoveCol - 1 < 0)
-                return coordinatesToChange; // maybe return new List<Tuple<int, in>> for clarity that it's empty
+                return new List<Tuple<int, int>>(); 
 
             if (Board[MoveRow, MoveCol - 1] == ' ' || Board[MoveRow, MoveCol - 1] == 'e')
-                return coordinatesToChange;
+                return new List<Tuple<int, int>>();
 
             while(startingPoint > 0)
             {
@@ -212,22 +214,27 @@ namespace OldBones
             var startingPoint = MoveRow;
             var coordinatesToChange = new List<Tuple<int, int>>();
 
-            if(MoveRow > 0)
+            if (MoveRow - 1 < 0)
+                return new List<Tuple<int, int>>();
+
+            if (Board[MoveRow - 1, MoveCol] == ' ' || Board[MoveRow - 1, MoveCol - 1] == 'e')
+                return new List<Tuple<int, int>>();
+
+            while (startingPoint > 0)
             {
-                while (startingPoint >= 0 || startingPoint <= 4)
+                startingPoint--;
+
+                if (Board[startingPoint, MoveCol] == oppositeColor)
                 {
-                    startingPoint--; // decrement because going up.
-                    if (Board[startingPoint, MoveCol] == oppositeColor)
-                    {
-                        coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveCol));
-                    }
-                    else
-                        break;
+                    coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveCol));
+                }
+                if (Board[startingPoint, MoveCol] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    return coordinatesToChange;
                 }
             }
 
-
-            return coordinatesToChange;
+            return new List<Tuple<int, int>>();
         }
 
         public List<Tuple<int, int>> LookDown()
@@ -238,21 +245,27 @@ namespace OldBones
             var boardLength = GetBoardSideLength();
             var coordinatesToChange = new List<Tuple<int, int>>();
 
-            if(MoveRow < boardLength - 1)
+            if (MoveRow + 1 >= boardLength)
+                return new List<Tuple<int, int>>();
+
+            if (Board[MoveRow + 1, MoveCol] == ' ' || Board[MoveRow + 1, MoveCol] == 'e')
+                return new List<Tuple<int, int>>();
+
+            while(startingPoint < 3)
             {
-                while(startingPoint >= 0 && startingPoint < boardLength)
+                startingPoint++;
+
+                if (Board[startingPoint, MoveCol] == oppositeColor)
                 {
-                    startingPoint++;
-                    if (Board[startingPoint, MoveCol] == oppositeColor)
-                    {
-                        coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveCol));
-                    }
-                    else
-                        break;
+                    coordinatesToChange.Add(new Tuple<int, int>(startingPoint, MoveCol));
+                }
+                if (Board[startingPoint, MoveCol] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    return coordinatesToChange;
                 }
             }
 
-            return coordinatesToChange;
+            return new List<Tuple<int, int>>();
         }
 
         public List<Tuple<int, int>> LookRight()
@@ -277,6 +290,43 @@ namespace OldBones
                 }
             }
             return coordinatesToChange;
+        }
+
+        public List<Tuple<int, int>> LookTopLeft()
+        {
+            var currentMove = Board[MoveRow, MoveCol];
+            var oppositeColor = GetOppositePlayerColor();
+            var startingPoint = MoveRow;
+            var boardLength = GetBoardSideLength();
+            var coordinatesToChange = new List<Tuple<int, int>>();
+
+            var row = MoveRow;
+            var column = MoveCol;
+
+            // move col and row col both decrement when going top left
+
+            if (MoveRow - 1 < 0 || MoveCol - 1 < 0)
+                return new List<Tuple<int, int>>();
+
+            if (Board[MoveRow + - 1, MoveCol - 1] == ' ' || Board[MoveRow - 1, MoveCol - 1] == 'e')
+                return new List<Tuple<int, int>>();
+
+            while(row > 0 && column > 0)
+            {
+                row--;
+                column--;
+
+                if (Board[row, column] == oppositeColor)
+                {
+                    coordinatesToChange.Add(new Tuple<int, int>(row, column));
+                }
+                if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    return coordinatesToChange;
+                }
+            }
+
+            return new List<Tuple<int, int>>();
         }
         #endregion
 
