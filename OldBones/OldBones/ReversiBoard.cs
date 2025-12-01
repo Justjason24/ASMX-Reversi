@@ -477,47 +477,62 @@ namespace OldBones
         #region Finding elible moves
         public Tuple<int, int> LookRightForEligibleMoves(int row, int column)
         {
-            var boardLength = Math.Sqrt(this.Board.Length);
+            // col increases
+            var boardLength = GetBoardSideLength();
 
-            // NOTES: We check if the square we're about to check is in bound. Since I'm about to do a comparison I need to check so I don't get an OOB error.
-            if(column + 1 >= boardLength)
+            if (column + 1 >= boardLength)
                 return new Tuple<int, int>(-1, -1);
 
-            // NOTES: At this point, all of the current's player colors pebbles have been set. Therefore, we are now looking at eligible moves for the opposite colors.
-            // NOTES cont: That is why we see if the piece next to the opposite pebble is the current color so we can mark the space past it eligible.
-            if (Board[row, column + 1] != Convert.ToChar(CurrentPlayerColor))
-            {
+            if (Board[row, column + 1] == ' ' || Board[row, column + 1] == 'e')
                 return new Tuple<int, int>(-1, -1);
-            }
+
+            column++;
 
             while(column < boardLength)
             {
-                if (Board[row, column] == ' ')
+                if (Board[row, column] == GetOppositePlayerColor())
+                    return new Tuple<int, int>(-1, -1); //proven! leave this! (until it isn't and I end up changing it)
+
+                if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    column++;
+                    continue;
+                }
+
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
                     return new Tuple<int, int>(row, column);
-
-                column++;
             }
-
 
             return new Tuple<int, int>(-1, -1);
         }
 
         public Tuple<int, int> LookUpForEligibleMoves(int row, int column)
         {
+            // row decreases
             if (row - 1 < 0)
                 return new Tuple<int, int>(-1, -1);
 
-            if (Board[row - 1, column] != Convert.ToChar(CurrentPlayerColor))
-            {
+            if (Board[row - 1, column] == ' ' || Board[row - 1, column] == 'e')
                 return new Tuple<int, int>(-1, -1);
-            }
 
-            while(row >= 0)
+            row--;
+
+            while (row >= 0)
             {
-                if (Board[row, column] == ' ')
+
+                if (Board[row, column] == GetOppositePlayerColor())
+                    return new Tuple<int, int>(-1, -1); //proven! leave this! (until it isn't and I end up changing it)
+
+                if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    row--;
+                    continue;
+                }
+
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
                     return new Tuple<int, int>(row, column);
 
-                row--;
+
             }
 
             return new Tuple<int, int>(-1, -1);
@@ -525,22 +540,30 @@ namespace OldBones
 
         public Tuple<int, int> LookDownForEligibleMoves(int row, int column)
         {
-            var boardLength = Math.Sqrt(this.Board.Length); 
+            // row increases
+            var boardLength = GetBoardSideLength();
 
-            if(row + 1 >= boardLength)
+            if (row + 1 >= boardLength)
                 return new Tuple<int, int>(-1, -1);
 
-            if (Board[row + 1, column] != Convert.ToChar(CurrentPlayerColor))
-            {
+            if (Board[row + 1, column] == ' ' || Board[row + 1, column] == 'e')
                 return new Tuple<int, int>(-1, -1);
-            }
 
-            while(row < boardLength)
+            row++;
+
+            while (row < boardLength)
             {
-                if (Board[row, column] == ' ')
+                if (Board[row, column] == GetOppositePlayerColor())
+                    return new Tuple<int, int>(-1, -1); //proven! leave this! (until it isn't and I end up changing it)
+
+                if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    row++;
+                    continue;
+                }
+
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
                     return new Tuple<int, int>(row, column);
-
-                row++;
             }
 
             return new Tuple<int, int>(-1, -1);
