@@ -22,6 +22,9 @@ export class ReversiComponent implements OnInit {
     [' ', ' ', 'e', ' ']
   ];
 
+  moveHistory: any[] = [];
+  chunkedMoveHistory: string[][] = [];
+
   ngOnInit() {
       // this.dataService.postDummyData().subscribe(x => {
       //   console.log(x);
@@ -32,6 +35,12 @@ export class ReversiComponent implements OnInit {
 
   onCellClick(playerColor: any, rowNumber: any, columnNumber: any) {
 
+    this.moveHistory.push(playerColor, rowNumber, columnNumber);
+    this.chunkedMoveHistory = [];
+    for(let i = 0; i < this.moveHistory.length; i += 3) {
+      this.chunkedMoveHistory.push(this.moveHistory.slice(i, i + 3));
+    }
+    
     this.dataService.postMoveData(playerColor, rowNumber, columnNumber, this.tableData.toString() ).subscribe(
       (data) => {
         console.log('I got this data back! ', data); // This can be deleted soon
