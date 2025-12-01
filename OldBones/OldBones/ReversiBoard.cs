@@ -136,7 +136,7 @@ namespace OldBones
             // iterate over all opposite player colors and look in all directions for eligable moves. 
             // TODO - optimize this. This could potentially be dozens of pebbles - each pebble calling 8 seek functions
 
-            var debugTuple = new Tuple<int, int>(3, 0);
+            var debugTuple = new Tuple<int, int>(-2, -1);
 
             var eligibleMoveCoordinates = new List<Tuple<int, int>>();
             foreach (var oppositePebblePosition in allOppositePebblesPositions)
@@ -166,6 +166,10 @@ namespace OldBones
                     Console.WriteLine();
 
                 eligibleMoveCoordinates.Add(LookDownLeftForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
+                if (eligibleMoveCoordinates.Contains(debugTuple))
+                    Console.WriteLine();
+
+                eligibleMoveCoordinates.Add(LookTopRightForEligibleMoves(oppositePebblePosition.Item1, oppositePebblePosition.Item2));
                 if (eligibleMoveCoordinates.Contains(debugTuple))
                     Console.WriteLine();
             }
@@ -650,6 +654,42 @@ namespace OldBones
                     return new Tuple<int, int>(row, column);
 
             }
+
+            return new Tuple<int, int>(-1, -1);
+        }
+
+        public Tuple<int, int> LookTopRightForEligibleMoves(int row, int column)
+        {
+            // row decreases and col increases
+            var boardLength = GetBoardSideLength();
+
+            if (row - 1 < 0 || column + 1 >= boardLength)
+                return new Tuple<int, int>(-1, -1);
+
+            if (Board[row - 1, column + 1] == ' ' || Board[row - 1, column + 1] == 'e')
+                return new Tuple<int, int>(-1, -1);
+
+            row--;
+            column++;
+
+            while (row >= 0 && column < boardLength)
+            {
+                if (Board[row, column] == GetOppositePlayerColor())
+                    return new Tuple<int, int>(-1, -1);
+
+                if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    row--;
+                    column++;
+                    continue;
+                }
+
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
+                    return new Tuple<int, int>(row, column);
+
+            }
+
+
 
             return new Tuple<int, int>(-1, -1);
         }
