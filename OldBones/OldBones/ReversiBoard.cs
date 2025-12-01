@@ -136,7 +136,7 @@ namespace OldBones
             // iterate over all opposite player colors and look in all directions for eligable moves. 
             // TODO - optimize this. This could potentially be dozens of pebbles - each pebble calling 8 seek functions
 
-            var debugTuple = new Tuple<int, int>(-2, -1);
+            var debugTuple = new Tuple<int, int>(1, 3);
 
             var eligibleMoveCoordinates = new List<Tuple<int, int>>();
             foreach (var oppositePebblePosition in allOppositePebblesPositions)
@@ -578,47 +578,68 @@ namespace OldBones
 
         public Tuple<int, int> LookTopLeftForEligibleMoves(int row, int column)
         {
-            // Need to make sure we're within bound so we don't access an invalid coordinate in the Board matrix
+            // row and col decrease
+            var boardLength = GetBoardSideLength();
+
             if (row - 1 < 0 || column - 1 < 0)
                 return new Tuple<int, int>(-1, -1);
 
-            if (Board[row - 1, column - 1] != Convert.ToChar(CurrentPlayerColor))
-            {
+            if (Board[row - 1, column - 1] == ' ' || Board[row - 1, column - 1] == 'e')
                 return new Tuple<int, int>(-1, -1);
-            }
+
+            row--;
+            column--;
 
             while (row >= 0 && column >= 0)
             {
-                if (Board[row, column] == ' ')
+                if (Board[row, column] == GetOppositePlayerColor())
+                    return new Tuple<int, int>(-1, -1);
+
+                if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    row--;
+                    column--;
+                    continue;
+                }
+
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
                     return new Tuple<int, int>(row, column);
 
-                row--;
-                column--;
             }
+
 
             return new Tuple<int, int>(-1, -1);
         }
 
         public Tuple<int, int>LookDownRightForEligibleMoves(int row, int column)
         {
+            // row and col increase
             var boardLength = GetBoardSideLength();
 
             if (row + 1 >= boardLength || column + 1 >= boardLength)
                 return new Tuple<int, int>(-1, -1);
 
-            if (Board[row + 1, column + 1] != Convert.ToChar(CurrentPlayerColor))
-            {
+            if (Board[row + 1, column + 1] == ' ' || Board[row + 1, column + 1] == 'e')
                 return new Tuple<int, int>(-1, -1);
-            }
 
-            while(row < boardLength && column < boardLength)
+            row++;
+            column++;
+
+            while (row < boardLength && column < boardLength)
             {
-                if (Board[row, column] == ' ')
+                if (Board[row, column] == GetOppositePlayerColor())
+                    return new Tuple<int, int>(-1, -1);
+
+                if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    row++;
+                    column++;
+                    continue;
+                }
+
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
                     return new Tuple<int, int>(row, column);
 
-                row++;
-                column++;
-                   
             }
 
             return new Tuple<int, int>(-1, -1);
