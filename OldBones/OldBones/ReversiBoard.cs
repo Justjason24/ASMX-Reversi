@@ -84,6 +84,10 @@ namespace OldBones
             if (coordinatesToChange.Contains(debugTuple))
                 Console.WriteLine();
 
+            coordinatesToChange.AddRange(LookDownLeft());
+            if (coordinatesToChange.Contains(debugTuple))
+                Console.WriteLine();
+
             coordinatesToChange = coordinatesToChange.Distinct().ToList();
 
             foreach(var coordinate in coordinatesToChange)
@@ -429,6 +433,40 @@ namespace OldBones
             }
             return new List<Tuple<int, int>>();
 
+        }
+
+        public List<Tuple<int, int>> LookDownLeft()
+        {
+            // row increases and col decreases
+            var oppositeColor = GetOppositePlayerColor();
+            var coordinatesToChange = new List<Tuple<int, int>>();
+            var boardLength = GetBoardSideLength();
+
+            var row = MoveRow;
+            var column = MoveCol;
+
+            if (MoveRow + 1 > boardLength - 1 || MoveCol - 1 < 0)
+                return new List<Tuple<int, int>>();
+
+            if (Board[MoveRow + 1, MoveCol - 1] == ' ' || Board[MoveRow + 1, MoveCol - 1] == 'e')
+                return new List<Tuple<int, int>>();
+
+            while (row < boardLength - 1 && column > 0)
+            {
+                row++;
+                column--;
+
+                if (Board[row, column] == oppositeColor)
+                {
+                    coordinatesToChange.Add(new Tuple<int, int>(row, column));
+                }
+                if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
+                {
+                    return coordinatesToChange;
+                }
+            }
+
+            return new List<Tuple<int, int>>();
         }
         #endregion
 
