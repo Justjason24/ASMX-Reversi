@@ -44,4 +44,8 @@ export class DataserviceService {
   
   return this.http.post(`https://localhost:44329/WebService1.asmx`, xmlData, {headers: headers, responseType: 'text'});
   }
+
+  getEligblePieces(currentPlayerColor: string, currentBoard: any) {
+    
+  }
 }

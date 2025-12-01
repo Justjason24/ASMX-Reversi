@@ -40,7 +40,7 @@ export class ReversiComponent implements OnInit {
     for(let i = 0; i < this.moveHistory.length; i += 3) {
       this.chunkedMoveHistory.push(this.moveHistory.slice(i, i + 3));
     }
-    
+
     this.dataService.postMoveData(playerColor, rowNumber, columnNumber, this.tableData.toString() ).subscribe(
       (data) => {
         console.log('I got this data back! ', data); // This can be deleted soon
@@ -54,22 +54,22 @@ export class ReversiComponent implements OnInit {
 
         else {
 
-          // Clicking the top right of the board returns a row = 0 and column = 3 in a 4x4 grid
-          //this.tableData[rowNumber][columnNumber] = this.activePlayerColor;
-
           var boardArray = this.reallyBadBoardUpdater(parsedText);
-          // this.updateBoard(boardArray);
+          this.tableData = this.updateBoard(boardArray); 
 
-          this.tableData = this.updateBoard(boardArray);
-          
-          this.activePlayerColor == 'w' ? this.activePlayerColor = 'b' : this.activePlayerColor = 'w'
+          // if there is not eligible moves, keep the same color to go again.
+          if(!parsedText.includes("e")) {
+            this.activePlayerColor == 'w' ? this.activePlayerColor = 'w' : this.activePlayerColor = 'b'
+          }
+          else {
+            this.activePlayerColor == 'w' ? this.activePlayerColor = 'b' : this.activePlayerColor = 'w'
 
-          // console.log(this.tableData);
-          // console.log('Stringified version to send to Web Service', this.tableData.toString());
+            // call a seperate asmx web method to re-find eligble moves. Must be a better way
+            // TODO: refactor
 
-          // console.log('Current Player Color', playerColor)
-          // console.log('Row Data:', rowNumber);
-          // console.log('Row Index:', columnNumber);
+            
+          }       
+
         }
       }
     );
