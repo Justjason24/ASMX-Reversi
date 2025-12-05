@@ -40,12 +40,10 @@ export class DataserviceService {
   </soap:Body>
 </soap:Envelope>`;
 
-  console.log("Making a real request to the web service");
+  console.log("Making a real request to the web service" + "\n" + xmlData);
   
   return this.http.post(`https://localhost:44329/WebService1.asmx`, xmlData, {headers: headers, responseType: 'text'});
   }
 
-  getEligblePieces(currentPlayerColor: string, currentBoard: any) {
-    
-  }
+
 }

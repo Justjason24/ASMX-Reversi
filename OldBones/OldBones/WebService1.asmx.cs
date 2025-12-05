@@ -62,7 +62,7 @@ namespace OldBones
         }
 
         [WebMethod]
-        public string ReversiNextMove(ReversiBoard board)
+        public ReversiBoard ReversiNextMove(ReversiBoard board)
         {
             board.FillBoardArray();
 
@@ -70,14 +70,15 @@ namespace OldBones
             {
                 var sb = new StringBuilder();
                 board.ErrorMessages.ForEach(x => sb.Append(x));
-                return sb.ToString();
+                //return sb.ToString();
             }
 
             board.UpdateBoardPieces();
             board.MarkEligibleMoves();
             board.StringifyBoard();
+            board.SetOppositePlayerColor();
 
-            return board.BoardString;
+            return board;
         }
     }
 }

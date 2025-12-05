@@ -750,6 +750,11 @@ namespace OldBones
 
         }
 
+        public void SetOppositePlayerColor()
+        {
+            this.CurrentPlayerColor = GetOppositePlayerColor().ToString();
+        }
+
         public double GetBoardSideLength()
         {
             return Math.Sqrt(this.Board.Length);

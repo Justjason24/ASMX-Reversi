@@ -41,12 +41,12 @@ export class ReversiComponent implements OnInit {
       this.chunkedMoveHistory.push(this.moveHistory.slice(i, i + 3));
     }
 
+    console.log(this.activePlayerColor);
     this.dataService.postMoveData(playerColor, rowNumber, columnNumber, this.tableData.toString() ).subscribe(
       (data) => {
         console.log('I got this data back! ', data); // This can be deleted soon
 
-        // var parsedText = this.reallyBadXMLParser(data, "<ReversiNextMoveResult>", "</ReversiNextMoveResult>")
-        var parsedText = this.getTextBetweenStrings(data, "<ReversiNextMoveResult>", "</ReversiNextMoveResult>");
+        var parsedText = this.getTextBetweenStrings(data, "<BoardString>", "</BoardString>");
         console.log("This is the parsed text", parsedText);
         if(parsedText?.startsWith("ERROR")){
           this.errorMessage = parsedText;
@@ -54,22 +54,11 @@ export class ReversiComponent implements OnInit {
 
         else {
 
+          
           var boardArray = this.reallyBadBoardUpdater(parsedText);
           this.tableData = this.updateBoard(boardArray); 
-
-          // if there is not eligible moves, keep the same color to go again.
-          if(!parsedText.includes("e")) {
-            this.activePlayerColor == 'w' ? this.activePlayerColor = 'w' : this.activePlayerColor = 'b'
-          }
-          else {
-            this.activePlayerColor == 'w' ? this.activePlayerColor = 'b' : this.activePlayerColor = 'w'
-
-            // call a seperate asmx web method to re-find eligble moves. Must be a better way
-            // TODO: refactor
-
-            
-          }       
-
+    
+          this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
         }
       }
     );
