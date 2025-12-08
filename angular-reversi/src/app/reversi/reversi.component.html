@@ -5,12 +5,12 @@
 <h3>Current player color is: {{activePlayerColor}}</h3>
 
 <div *ngIf="!eligibleMoves">
-    <button>Test</button>
+    <p>No elgible moves for {{activePlayerColor}} - click below to go to next player.</p>
+    <button (click)="onCellClick(activePlayerColor, -1, -1)">Test</button>
 </div>
 
 <!-- Makes table unclickable when button above is visible -->
-<!-- <table [class.unclickable]="!eligibleMoves">  -->
-    <table>
+<table [class.unclickable]="!eligibleMoves"> 
     <tr *ngFor = "let row of tableData; let i = index">
         <td *ngFor="let cell of row; let j = index"
             (click)="onCellClick(activePlayerColor, i, j)"

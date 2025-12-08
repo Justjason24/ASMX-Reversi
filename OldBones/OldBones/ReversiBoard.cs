@@ -43,15 +43,18 @@ namespace OldBones
 
             this.Board = boardData;
 
-            if (this.Board[MoveRow, MoveCol] != 'e')
-                ErrorMessages.Add("ERROR: Invalid Move");
+            // this breaks with my new eligible moves button, worry about it later lol
+            //if (this.Board[MoveRow, MoveCol] != 'e')
+            //    ErrorMessages.Add("ERROR: Invalid Move");
 
-            this.Board[MoveRow, MoveCol] = Convert.ToChar(CurrentPlayerColor); // tack in current move to the board array
+
 
         }
 
         public void UpdateBoardPieces() // this either needs a name change or something because I plan on handling finding the eligable moves elsewhere
         {
+            this.Board[MoveRow, MoveCol] = Convert.ToChar(CurrentPlayerColor); // tack in current move to the board array
+
             var coordinatesToChange = new List<Tuple<int, int>>();
 
             var debugTuple = new Tuple<int, int>(-2, -3);

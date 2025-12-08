@@ -66,14 +66,9 @@ namespace OldBones
         {
             board.FillBoardArray();
 
-            if(board.ErrorMessages.Any())
-            {
-                var sb = new StringBuilder();
-                board.ErrorMessages.ForEach(x => sb.Append(x));
-                //return sb.ToString();
-            }
+            if (board.MoveRow > -1 && board.MoveCol > -1)
+                board.UpdateBoardPieces();
 
-            board.UpdateBoardPieces();
             board.MarkEligibleMoves();
             board.StringifyBoard();
             board.SetOppositePlayerColor();
