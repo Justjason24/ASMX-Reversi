@@ -4,6 +4,10 @@
 
 <h3>Current player color is: {{activePlayerColor}}</h3>
 
+<div *ngIf="!eligibleMoves">
+    <button>Test</button>
+</div>
+
 <table>
     <tr *ngFor = "let row of tableData; let i = index">
         <td *ngFor="let cell of row; let j = index"

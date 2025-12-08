@@ -14,6 +14,7 @@ export class ReversiComponent implements OnInit {
 
   activePlayerColor: string = 'w';
   errorMessage: string = '';
+  eligibleMoves = true;
 
   tableData: any[][] = [
     [' ', 'e', ' ', ' '],
@@ -26,9 +27,7 @@ export class ReversiComponent implements OnInit {
   chunkedMoveHistory: string[][] = [];
 
   ngOnInit() {
-      // this.dataService.postDummyData().subscribe(x => {
-      //   console.log(x);
-      // });
+
       console.log("test area");
   }
 
@@ -41,31 +40,27 @@ export class ReversiComponent implements OnInit {
       this.chunkedMoveHistory.push(this.moveHistory.slice(i, i + 3));
     }
 
-    console.log(this.activePlayerColor);
     this.dataService.postMoveData(playerColor, rowNumber, columnNumber, this.tableData.toString() ).subscribe(
       (data) => {
-        console.log('I got this data back! ', data); // This can be deleted soon
 
-        var parsedText = this.getTextBetweenStrings(data, "<BoardString>", "</BoardString>");
-        console.log("This is the parsed text", parsedText);
-        if(parsedText?.startsWith("ERROR")){
-          this.errorMessage = parsedText;
-        }
+        var boardString = this.getTextBetweenStrings(data, "<BoardString>", "</BoardString>");
 
-        else {
+        var boardArray = this.createBoardArrayFromString(boardString);
+        this.tableData = this.updateBoard(boardArray); 
+  
+        this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
 
-          
-          var boardArray = this.reallyBadBoardUpdater(parsedText);
-          this.tableData = this.updateBoard(boardArray); 
-    
-          this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
-        }
+        if(!boardArray.includes('e')) {
+          console.log("Made it here")
+          this.eligibleMoves = false;
+        } 
+        
       }
     );
   }
 
 
-  reallyBadBoardUpdater(gameDataString: string) {
+  createBoardArrayFromString(gameDataString: string) {
       var boardArray = gameDataString.split(",");
       boardArray.pop(); // remove the last element
       return boardArray;
