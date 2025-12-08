@@ -51,9 +51,12 @@ export class ReversiComponent implements OnInit {
         this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
 
         if(!boardArray.includes('e')) {
-          console.log("Made it here")
           this.eligibleMoves = false;
         } 
+
+        if(boardArray.includes('e')) {
+          this.eligibleMoves = true;
+        }
         
       }
     );
