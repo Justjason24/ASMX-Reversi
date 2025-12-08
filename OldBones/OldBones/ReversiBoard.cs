@@ -291,7 +291,7 @@ namespace OldBones
             if (Board[MoveRow + 1, MoveCol] == ' ' || Board[MoveRow + 1, MoveCol] == 'e')
                 return new List<Tuple<int, int>>();
 
-            while(startingPoint < 3)
+            while(startingPoint < boardLength - 1)
             {
                 startingPoint++;
 
