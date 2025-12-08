@@ -8,7 +8,9 @@
     <button>Test</button>
 </div>
 
-<table>
+<!-- Makes table unclickable when button above is visible -->
+<!-- <table [class.unclickable]="!eligibleMoves">  -->
+    <table>
     <tr *ngFor = "let row of tableData; let i = index">
         <td *ngFor="let cell of row; let j = index"
             (click)="onCellClick(activePlayerColor, i, j)"
