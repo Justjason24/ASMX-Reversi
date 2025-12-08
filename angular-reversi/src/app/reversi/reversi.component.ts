@@ -15,6 +15,10 @@ export class ReversiComponent implements OnInit {
   activePlayerColor: string = 'w';
   errorMessage: string = '';
   eligibleMoves = true;
+  boardFull = false;
+
+  whiteScore: number = 0;
+  blackScore: number = 0;
 
   tableData: any[][] = [
     [' ', 'e', ' ', ' '],
@@ -40,6 +44,8 @@ export class ReversiComponent implements OnInit {
       this.chunkedMoveHistory.push(this.moveHistory.slice(i, i + 3));
     }
 
+
+
     this.dataService.postMoveData(playerColor, rowNumber, columnNumber, this.tableData.toString() ).subscribe(
       (data) => {
 
@@ -50,6 +56,10 @@ export class ReversiComponent implements OnInit {
   
         this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
 
+        if(boardArray.every(x => x === 'w' || x === 'b')) {
+          this.boardFull = true;
+        }
+
         if(!boardArray.includes('e')) {
           this.eligibleMoves = false;
         } 
@@ -57,6 +67,8 @@ export class ReversiComponent implements OnInit {
         if(boardArray.includes('e')) {
           this.eligibleMoves = true;
         }
+
+        this.calculateScore();
         
       }
     );
@@ -97,17 +109,9 @@ export class ReversiComponent implements OnInit {
 
   }
 
-  // onCellDummyClick(playerColor: any, rowNumber: any, columnNumber: any) {
-
-  //   this.dataService.postDummyData().subscribe(
-  //     (data) => {
-  //       console.log('I got this data back! ', data);
-  //     }
-  //   );
-
-  //   console.log('Current Player Color', playerColor)
-  //   console.log('Row Data:', rowNumber);
-  //   console.log('Row Index:', columnNumber);
-  // }
+  calculateScore() {
+    this.whiteScore = this.tableData.flat().filter(x => x === 'w').length;
+    this.blackScore = this.tableData.flat().filter(x => x === 'b').length;
+  }
   
 }
