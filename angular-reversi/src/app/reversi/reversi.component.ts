@@ -12,7 +12,7 @@ export class ReversiComponent implements OnInit {
 
   constructor(public dataService: DataserviceService) {}
 
-  activePlayerColor: string = 'w';
+  activePlayerColor: string = 'b';
   errorMessage: string = '';
   eligibleMoves = true;
   boardFull = false;
@@ -23,10 +23,10 @@ export class ReversiComponent implements OnInit {
   tableData: any[][] = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',],
-    [' ', ' ', ' ', 'e', ' ', ' ', ' ', ' ',],
-    [' ', ' ', 'e', 'b', 'w', ' ', ' ', ' ',],
-    [' ', ' ', ' ', 'w', 'b', 'e', ' ', ' ',],
     [' ', ' ', ' ', ' ', 'e', ' ', ' ', ' ',],
+    [' ', ' ', ' ', 'b', 'w', 'e', ' ', ' ',],
+    [' ', ' ', 'e', 'w', 'b', ' ', ' ', ' ',],
+    [' ', ' ', ' ', 'e', ' ', ' ', ' ', ' ',],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',],
     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',]
   ];
