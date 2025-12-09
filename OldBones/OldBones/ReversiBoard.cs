@@ -240,7 +240,11 @@ namespace OldBones
                 {
                     return coordinatesToChange;
                 }
-                    
+                if (Board[MoveRow, startingPoint] == ' ' || Board[MoveRow, startingPoint] == 'e')
+                {
+                    return new List<Tuple<int, int>>();
+                }
+
             }
 
 
@@ -272,6 +276,10 @@ namespace OldBones
                 {
                     return coordinatesToChange;
                 }
+                if (Board[startingPoint, MoveCol] == ' ' || Board[startingPoint, MoveCol] == 'e')
+                {
+                    return new List<Tuple<int, int>>();
+                }
             }
 
             return new List<Tuple<int, int>>();
@@ -302,6 +310,10 @@ namespace OldBones
                 if (Board[startingPoint, MoveCol] == Convert.ToChar(CurrentPlayerColor))
                 {
                     return coordinatesToChange;
+                }
+                if (Board[startingPoint, MoveCol] == ' ' || Board[startingPoint, MoveCol] == 'e')
+                {
+                    return new List<Tuple<int, int>>();
                 }
             }
 
@@ -373,6 +385,10 @@ namespace OldBones
                 {
                     return coordinatesToChange;
                 }
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
+                {
+                    return new List<Tuple<int, int>>();
+                }
             }
 
             return new List<Tuple<int, int>>();
@@ -406,6 +422,10 @@ namespace OldBones
                 if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
                 {
                     return coordinatesToChange;
+                }
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
+                {
+                    return new List<Tuple<int, int>>();
                 }
             }
             return new List<Tuple<int, int>>();
@@ -441,6 +461,10 @@ namespace OldBones
                 {
                     return coordinatesToChange;
                 }
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
+                {
+                    return new List<Tuple<int, int>>();
+                }
             }
             return new List<Tuple<int, int>>();
 
@@ -474,6 +498,10 @@ namespace OldBones
                 if (Board[row, column] == Convert.ToChar(CurrentPlayerColor))
                 {
                     return coordinatesToChange;
+                }
+                if (Board[row, column] == ' ' || Board[row, column] == 'e')
+                {
+                    return new List<Tuple<int, int>>();
                 }
             }
 
