@@ -51,10 +51,10 @@ namespace OldBones
         {
             var debugBoard = new ReversiBoard()
             {
-                BoardString = " , , , ,e, , , , ,e, ,e,w,b, , ,e,w,w,w,b, , , , , , ,w,w, , , , , ,e,w,w, , , , , ,e,w,w,b, , , , , ,w,w, ,b, , , , ,e,e, , ,b,",
+                BoardString = " , , , ,e, , , , ,e, ,e,w,b, , ,e,w,w,w,b, , , , , , ,w,w, , , , , ,e,w,w, ,b, , , , ,w,w,w,w,w, , ,e,w,b, ,b, , , , ,b, , , ,b,",
                 CurrentPlayerColor = "b",
-                MoveCol = 3,
-                MoveRow = 6,
+                MoveCol = 7,
+                MoveRow = 5,
             };
 
             debugBoard.FillBoardArray();

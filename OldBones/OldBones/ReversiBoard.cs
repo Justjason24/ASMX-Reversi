@@ -57,7 +57,7 @@ namespace OldBones
 
             var coordinatesToChange = new List<Tuple<int, int>>();
 
-            var debugTuple = new Tuple<int, int>(-2, -3);
+            var debugTuple = new Tuple<int, int>(4, 3);
 
             coordinatesToChange.AddRange(LookLeft());
             if(coordinatesToChange.Contains(debugTuple))
@@ -333,6 +333,10 @@ namespace OldBones
                 if (Board[MoveRow, startingPoint] == Convert.ToChar(CurrentPlayerColor))
                 {
                     return coordinatesToChange;
+                }
+                if (Board[MoveRow, startingPoint] == ' ' || Board[MoveRow, startingPoint] == 'e')
+                {
+                    return new List<Tuple<int, int>>();
                 }
 
             }
