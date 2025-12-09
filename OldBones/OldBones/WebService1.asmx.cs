@@ -47,6 +47,22 @@ namespace OldBones
         }
 
         [WebMethod]
+        public ReversiBoard Debug()
+        {
+            var debugBoard = new ReversiBoard()
+            {
+                BoardString = " , , , ,e, , , , ,e, ,e,w,b, , ,e,w,w,w,b, , , , , , ,w,w, , , , , ,e,w,w, , , , , ,e,w,w,b, , , , , ,w,w, ,b, , , , ,e,e, , ,b,",
+                CurrentPlayerColor = "b",
+                MoveCol = 3,
+                MoveRow = 6,
+            };
+
+            debugBoard.FillBoardArray();
+
+            return debugBoard; 
+        }
+
+        [WebMethod]
         public string AddA(string name)
         {
             HttpContext context = HttpContext.Current;

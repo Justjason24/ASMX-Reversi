@@ -117,5 +117,30 @@ export class ReversiComponent implements OnInit {
     this.whiteScore = this.tableData.flat().filter(x => x === 'w').length;
     this.blackScore = this.tableData.flat().filter(x => x === 'b').length;
   }
+
+  debugAPICall() {
+    this.dataService.debugMethod().subscribe((data) => {
+    var boardString = this.getTextBetweenStrings(data, "<BoardString>", "</BoardString>");
+
+    var boardArray = this.createBoardArrayFromString(boardString);
+    this.tableData = this.updateBoard(boardArray); 
+  
+    this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
+
+    if(boardArray.every(x => x === 'w' || x === 'b')) {
+      this.boardFull = true;
+    }
+
+        if(!boardArray.includes('e')) {
+          this.eligibleMoves = false;
+        } 
+
+        if(boardArray.includes('e')) {
+          this.eligibleMoves = true;
+        }
+
+        this.calculateScore();
+    });
+  }
   
 }
