@@ -384,7 +384,7 @@ namespace OldBones
             var row = MoveRow;
             var column = MoveCol;
 
-            if (MoveRow + 1 > 3 || MoveCol + 1 > 3)
+            if (MoveRow + 1 > boardLength - 1 || MoveCol + 1 > boardLength - 1)
                 return new List<Tuple<int, int>>();
 
             if (Board[MoveRow + 1, MoveCol + 1] == ' ' || Board[MoveRow + 1, MoveCol + 1] == 'e')
@@ -418,7 +418,7 @@ namespace OldBones
             var row = MoveRow;
             var column = MoveCol;
 
-            if (MoveRow - 1 < 0 || MoveCol + 1 > 3)
+            if (MoveRow - 1 < 0 || MoveCol + 1 > boardLength - 1)
                 return new List<Tuple<int, int>>();
 
             if (Board[MoveRow - 1, MoveCol + 1] == ' ' || Board[MoveRow - 1, MoveCol + 1] == 'e')
