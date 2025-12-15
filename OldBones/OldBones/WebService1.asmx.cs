@@ -49,15 +49,23 @@ namespace OldBones
         [WebMethod]
         public ReversiBoard Debug()
         {
+            //var debugBoard = new ReversiBoard()
+            //{
+            //    BoardString = " , , , ,e, , , , ,e, ,e,w,b, , ,e,w,w,w,b, , , , , , ,w,w, , , , , ,e,w,w, ,b, , , , ,w,w,w,w,w, , ,e,w,b, ,b, , , , ,b, , , ,b,",
+            //    CurrentPlayerColor = "b",
+            //    MoveCol = 7,
+            //    MoveRow = 5,
+            //};
+
+            //debugBoard.FillBoardArray();
+
             var debugBoard = new ReversiBoard()
             {
-                BoardString = " , , , ,e, , , , ,e, ,e,w,b, , ,e,w,w,w,b, , , , , , ,w,w, , , , , ,e,w,w, ,b, , , , ,w,w,w,w,w, , ,e,w,b, ,b, , , , ,b, , , ,b,",
+                BoardString = "w,w,w,w,w,w,w,e,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,b,b,w,w,w,w,w,w,b,b,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,e,e,e,e,e,",
                 CurrentPlayerColor = "b",
                 MoveCol = 7,
                 MoveRow = 5,
             };
-
-            debugBoard.FillBoardArray();
 
             return debugBoard; 
         }
