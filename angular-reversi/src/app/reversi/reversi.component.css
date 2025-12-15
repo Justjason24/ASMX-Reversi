@@ -44,9 +44,11 @@ img {
 }
 
 .scoreboard {
-    border: 3px;
-    border-color: maroon;
-    border-style: solid;
+
+    /* DEBUG STUFF */
+    /* border: 3px;
+    border-color: purple;
+    border-style: dashed; */
     height: 20em;
 }
 
@@ -73,4 +75,10 @@ img {
   font-size: 7em;
   text-align: center;
   padding-top: .5em;
+}
+
+.active-player-border {
+    border: 3px;
+    border-color: maroon;
+    border-style: solid;
 }

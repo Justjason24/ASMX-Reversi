@@ -1,16 +1,16 @@
 <!-- <h1> BLACK: {{blackScore}} --- WHITE: {{whiteScore}}</h1> -->
 
-<h3>Current player color is: {{activePlayerColor}}</h3>
+<!-- <h3>Current player color is: {{activePlayerColor}}</h3> -->
 
 <div *ngIf="!eligibleMoves">
     <p>No elgible moves for {{activePlayerColor}} - click below to go to next player.</p>
     <button (click)="onCellClick(activePlayerColor, -1, -1)">Test</button>
 </div>
 
-<!-- Makes table unclickable when button above is visible -->
+
 <div class="game-area">
 
-    <div class="scoreboard">
+    <div class="scoreboard" [ngClass]=" { 'active-player-border' : activePlayerColor == 'b'} ">
         <h2 class="scoreboard-label" style="color: black;">Black</h2>
         <h3 class="scoreboard-score" style="color: black;">{{blackScore}}</h3>
     </div>
@@ -39,7 +39,7 @@
         </table>
     </div>
 
-    <div class="scoreboard">
+    <div class="scoreboard" [ngClass]=" { 'active-player-border' : activePlayerColor == 'w'} ">
         <h2 class="scoreboard-label" style="color: white;">White</h2>
         <h3 class="scoreboard-score" style="color: white;">{{whiteScore}}</h3>
     </div>
@@ -49,7 +49,7 @@
 
 
 
-<div id="move-history">
+<!-- <div id="move-history">
     <div *ngFor="let move of chunkedMoveHistory">
         <p>{{move}}</p>
     </div>
@@ -59,4 +59,4 @@
 
 <div>
     <button (click)="debugAPICall()">Debug board</button>
-</div>
+</div> -->
