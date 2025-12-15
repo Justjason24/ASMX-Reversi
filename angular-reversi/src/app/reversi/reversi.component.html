@@ -1,4 +1,4 @@
-<h1> BLACK: {{blackScore}} --- WHITE: {{whiteScore}}</h1>
+<!-- <h1> BLACK: {{blackScore}} --- WHITE: {{whiteScore}}</h1> -->
 
 <h3>Current player color is: {{activePlayerColor}}</h3>
 
@@ -9,6 +9,12 @@
 
 <!-- Makes table unclickable when button above is visible -->
 <div class="game-area">
+
+    <div class="scoreboard">
+        <h2 class="scoreboard-label" style="color: black;">Black</h2>
+        <h3 class="scoreboard-score" style="color: black;">{{blackScore}}</h3>
+    </div>
+
     <div class="board">
         <table [class.unclickable]="!eligibleMoves">
             <tr *ngFor="let row of tableData; let i = index">
@@ -34,8 +40,8 @@
     </div>
 
     <div class="scoreboard">
-        <h2 class="scoreboard-label">White</h2>
-        <h3 class="scoreboard-score">{{whiteScore}}</h3>
+        <h2 class="scoreboard-label" style="color: white;">White</h2>
+        <h3 class="scoreboard-score" style="color: white;">{{whiteScore}}</h3>
     </div>
 
 
