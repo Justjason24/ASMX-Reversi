@@ -61,7 +61,7 @@ namespace OldBones
 
             var debugBoard = new ReversiBoard()
             {
-                BoardString = "w,w,w,w,w,w,w,e,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,b,b,w,w,w,w,w,w,b,b,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,e,e,e,e,e,",
+                BoardString = "w,w,w,w,w,w,w,e,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,b,b,w,w,w,w,w,w,b,b,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,w,e,e,e,",
                 CurrentPlayerColor = "b",
                 MoveCol = 7,
                 MoveRow = 5,

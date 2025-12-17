@@ -26,7 +26,7 @@
     <div class="board">
         <table [class.unclickable]="!eligibleMoves">
             <tr *ngFor="let row of tableData; let i = index">
-                <td *ngFor="let cell of row; let j = index" (click)="onCellClick(activePlayerColor, i, j)">
+                <td *ngFor="let cell of row; let j = index">
 
                     <!-- TODO: validation on the onCellClick() method to ensure that it's a valid eligable move -->
 
@@ -39,7 +39,7 @@
                         <img src="../../assets/white_reversi.png">
                     </div>
 
-                    <div class="board-piece" *ngIf="cell == 'e'">
+                    <div class="board-piece" *ngIf="cell == 'e'" (click)="onCellClick(activePlayerColor, i, j)">
                         <img src="../../assets/eligable_move.png">
                     </div>
                 </td>
