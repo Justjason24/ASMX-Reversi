@@ -7,6 +7,13 @@
     <button (click)="onCellClick(activePlayerColor, -1, -1)">Test</button>
 </div> -->
 
+<div *ngIf ="gameOver" class="game-over-banner">
+    <h1>Game Over!</h1>
+    <h2 *ngIf="blackScore > whiteScore">Black Wins! {{blackScore}} to {{whiteScore}}</h2>
+    <h2 *ngIf="whiteScore > blackScore">White Wins! {{blackScore}} to {{whiteScore}}</h2>
+    <h2 *ngIf="whiteScore == blackScore">It's a Tie! {{blackScore}} to {{whiteScore}}</h2>
+</div>
+
 
 <div class="game-area">
 
@@ -46,7 +53,7 @@
         <h3 class="scoreboard-score" style="color: white;">{{whiteScore}}</h3>
 
 
-            <button *ngIf="!eligibleMoves" class="ineligible-move-card" (click)="onCellClick(activePlayerColor, -1, -1)">No elgible moves for {{activePlayerColor}} - click below to go to next player.</button>
+        <button *ngIf="!eligibleMoves && !gameOver" class="ineligible-move-card" (click)="onCellClick(activePlayerColor, -1, -1)">No elgible moves for {{activePlayerColor}} - click below to go to next player.</button>
 
     </div>
 

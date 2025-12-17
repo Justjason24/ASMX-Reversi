@@ -19,6 +19,7 @@ export class ReversiComponent implements OnInit {
 
   whiteScore: number = 2;
   blackScore: number = 2;
+  gameOver = false;
 
   tableData: any[][] = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',],
@@ -75,10 +76,11 @@ export class ReversiComponent implements OnInit {
 
         this.calculateScore();
         console.log(this.getTextBetweenStrings(data, "GameOver>", "</GameOver>"));
-        if(this.getTextBetweenStrings(data, "<GameOver>", "</GameOver>").trim() === "true") {
-          alert("Game over! Final score - Black: " + this.blackScore + " White: " + this.whiteScore);
+
+        if(this.getTextBetweenStrings(data, "<GameOver>", "</GameOver>") === "true")
+        {
+          this.gameOver = true;
         }
-        
       }
     );
   }
