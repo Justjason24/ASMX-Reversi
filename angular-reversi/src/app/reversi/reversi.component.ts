@@ -59,6 +59,7 @@ export class ReversiComponent implements OnInit {
         this.tableData = this.updateBoard(boardArray); 
   
         this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
+        // console.log("Is game over? " + this.getTextBetweenStrings(data, "<GameOver>", "</GameOver>"));
 
         if(boardArray.every(x => x === 'w' || x === 'b')) {
           this.boardFull = true;
@@ -73,6 +74,10 @@ export class ReversiComponent implements OnInit {
         }
 
         this.calculateScore();
+        console.log(this.getTextBetweenStrings(data, "GameOver>", "</GameOver>"));
+        if(this.getTextBetweenStrings(data, "<GameOver>", "</GameOver>").trim() === "true") {
+          alert("Game over! Final score - Black: " + this.blackScore + " White: " + this.whiteScore);
+        }
         
       }
     );

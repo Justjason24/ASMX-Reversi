@@ -17,6 +17,7 @@ namespace OldBones
         public string BoardString { get; set; }
         private char[,] Board { get; set; }
         public List<String> ErrorMessages = new List<String>();
+        public bool GameOver { get; set; }
 
 
         /// <summary>
@@ -775,6 +776,18 @@ namespace OldBones
 
 
         #endregion
+
+        public void CheckGameOver()
+        {
+            if(!BoardString.Contains('e') && !BoardString.Contains(' '))
+            {
+                this.GameOver = true;
+            }
+            else
+            {
+                this.GameOver = false;
+            }
+        }
 
         public char GetOppositePlayerColor()
         {

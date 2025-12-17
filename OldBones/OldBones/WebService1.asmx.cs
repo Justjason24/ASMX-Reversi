@@ -96,6 +96,7 @@ namespace OldBones
             board.MarkEligibleMoves();
             board.StringifyBoard();
             board.SetOppositePlayerColor();
+            board.CheckGameOver();
 
             return board;
         }
