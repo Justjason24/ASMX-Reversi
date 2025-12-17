@@ -49,7 +49,9 @@ img {
     /* border: 3px;
     border-color: purple;
     border-style: dashed; */
-    height: 20em;
+    height: 45em;
+    /* display: flex; */
+    position: relative;
 }
 
 .scoreboard-label {
@@ -81,4 +83,10 @@ img {
     border: 3px;
     border-color: maroon;
     border-style: solid;
+    height: 1em;
+}
+
+.ineligible-move-card {
+    position: absolute;
+    bottom: 0;
 }

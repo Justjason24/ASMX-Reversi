@@ -10,8 +10,9 @@
 
 <div class="game-area">
 
-    <div class="scoreboard" [ngClass]=" { 'active-player-border' : activePlayerColor == 'b'} ">
-        <h2 class="scoreboard-label" style="color: black;">Black</h2>
+    <div class="scoreboard">
+        <h2 class="scoreboard-label" [ngClass]=" { 'active-player-border' : activePlayerColor == 'b'} "
+            style="color: black;">Black</h2>
         <h3 class="scoreboard-score" style="color: black;">{{blackScore}}</h3>
     </div>
 
@@ -39,11 +40,15 @@
         </table>
     </div>
 
-    <div class="scoreboard" [ngClass]=" { 'active-player-border' : activePlayerColor == 'w'} ">
-        <h2 class="scoreboard-label" style="color: white;">White</h2>
+    <div class="scoreboard">
+        <h2 class="scoreboard-label" [ngClass]=" { 'active-player-border' : activePlayerColor == 'w'} "
+            style="color: white;">White</h2>
         <h3 class="scoreboard-score" style="color: white;">{{whiteScore}}</h3>
-    </div>
 
+
+            <button *ngIf="!eligibleMoves" class="ineligible-move-card" (click)="onCellClick(activePlayerColor, -1, -1)">No elgible moves for {{activePlayerColor}} - click below to go to next player.</button>
+
+    </div>
 
 </div>
 
@@ -58,7 +63,5 @@
 
 
 <div>
-    <button (click)="debugAPICall()">Debug board</button>
+    <button  (click)="debugAPICall()">Debug board</button>
 </div>
-
-
