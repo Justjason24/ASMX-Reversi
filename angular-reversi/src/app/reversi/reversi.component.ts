@@ -19,7 +19,9 @@ export class ReversiComponent implements OnInit {
 
   whiteScore: number = 2;
   blackScore: number = 2;
+  showMoveHistory = false;
   gameOver = false;
+
 
   tableData: any[][] = [
     [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',],

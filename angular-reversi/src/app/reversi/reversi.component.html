@@ -60,15 +60,20 @@
 </div>
 
 
+<div footer>
+    <mat-slide-toggle [(ngModel)]="showMoveHistory">Enable move history</mat-slide-toggle>
 
-<!-- <div id="move-history">
-    <div *ngFor="let move of chunkedMoveHistory">
-        <p>{{move}}</p>
+    <div *ngIf="showMoveHistory" id="move-history">
+        <div *ngFor="let move of chunkedMoveHistory">
+            <p>{{move}}</p>
+        </div>
     </div>
-</div> -->
 
-
-
-<div>
-    <button  (click)="debugAPICall()">Debug board</button>
 </div>
+
+
+
+
+<!-- <div>
+    <button  (click)="debugAPICall()">Debug board</button>
+</div> -->
