@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataserviceService } from '../services/dataservice.service';
-
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 
 @Component({

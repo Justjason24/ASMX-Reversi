@@ -1,3 +1,2 @@
-win condition
-styling
+
 if neither player has an eligble move, then we put the game is over
