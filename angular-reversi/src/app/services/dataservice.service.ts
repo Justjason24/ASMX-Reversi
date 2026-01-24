@@ -17,7 +17,7 @@ export class DataserviceService {
                       </soap:Body>
                     </soap:Envelope>`;
 
-    return this.http.post(`https://localhost:44329/WebService1.asmx`, xmlData, {headers: headers, responseType: 'text'});
+    return this.http.post(`http://localhost:44329/WebService1.asmx`, xmlData, {headers: headers, responseType: 'text'});
   }
 
   postMoveData(currentPlayerColor: string, moveRow: any, moveCol: any, currentBoard: any) {
@@ -38,7 +38,7 @@ export class DataserviceService {
 
   console.log("Making a real request to the web service" + "\n" + xmlData);
   
-  return this.http.post(`https://localhost:44329/WebService1.asmx`, xmlData, {headers: headers, responseType: 'text'});
+  return this.http.post(`http://localhost:44329/WebService1.asmx`, xmlData, {headers: headers, responseType: 'text'});
   }
 
 
