@@ -1,2 +1,2 @@
 
-if neither player has an eligble move, then we put the game is over
+Docker file works for ASMX but I cannot get the Angular side to run with Windows 
