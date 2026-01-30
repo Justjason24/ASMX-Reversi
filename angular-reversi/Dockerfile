@@ -57,13 +57,17 @@ RUN Get-NetAdapter | ForEach-Object { Set-DnsClientServerAddress -InterfaceAlias
     Start-Process msiexec -ArgumentList '/i', 'node.msi', '/quiet', '/qn' -Wait; \
     Remove-Item node.msi
 
+# Update PATH environment variable
+RUN setx PATH "$env:PATH;C:\Program Files\nodejs"
+
 # Copy package files
 COPY package*.json ./
 
 # Use npm cache to speed up install
 RUN npm config set cache C:/npm-cache
 RUN npm config set timeout 60000
-RUN npm install --cache C:/npm-cache --prefer-offline
+#RUN npm install --cache C:/npm-cache --prefer-offline
+RUN npm ci --prefer-offline --no-audit 
 
 # Copy the rest of the code
 COPY . .
