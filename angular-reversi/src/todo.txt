@@ -1,2 +1,1 @@
-
-Docker file works for ASMX but I cannot get the Angular side to run with Windows 
+docker run -p 4200:4200 <your-image-name> for angular

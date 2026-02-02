@@ -44,7 +44,7 @@
 # escape=\
 
 # Use the official Windows image with Node.js
-FROM mcr.microsoft.com/windows/servercore:1809
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
 # Switch to PowerShell
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
@@ -57,8 +57,8 @@ RUN Get-NetAdapter | ForEach-Object { Set-DnsClientServerAddress -InterfaceAlias
     Start-Process msiexec -ArgumentList '/i', 'node.msi', '/quiet', '/qn' -Wait; \
     Remove-Item node.msi
 
-# Update PATH environment variable
-RUN setx PATH "$env:PATH;C:\Program Files\nodejs"
+#RUN setx /M PATH "%PATH%;C:\Program Files\nodejs"
+#RUN setx /M PATH "$($env:PATH);C:\Program Files\nodejs"
 
 # Copy package files
 COPY package*.json ./
@@ -79,4 +79,4 @@ RUN npm run build --prod
 EXPOSE 80
 
 # Run the command to start the app
-CMD ["npm", "start"]
+CMD ["cmd", "/c", "npm", "start"]

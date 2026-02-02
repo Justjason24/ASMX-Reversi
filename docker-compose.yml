@@ -1,0 +1,10 @@
+services:
+  reversi-app1:
+    image: asmx-reversi:latest
+    ports:
+      - "44329:80"  # assuming it's a .NET app or similar
+
+  angular-reversi:
+    image: angular-reversi
+    ports:
+      - "4200:4200"
