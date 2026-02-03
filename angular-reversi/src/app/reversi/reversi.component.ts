@@ -114,7 +114,7 @@ export class ReversiComponent implements OnInit {
       for (let i = 0; i < numRows; i++) {
         const startIndex = i * numColumns;
         const endIndex = startIndex + numColumns;
-        // Slice the original array to get a chunk for the current row
+
         result.push(arr.slice(startIndex, endIndex));
       }
 
@@ -127,29 +127,6 @@ export class ReversiComponent implements OnInit {
     this.blackScore = this.tableData.flat().filter(x => x === 'b').length;
   }
 
-  debugAPICall() {
-    this.dataService.debugMethod().subscribe((data) => {
-    var boardString = this.getTextBetweenStrings(data, "<BoardString>", "</BoardString>");
 
-    var boardArray = this.createBoardArrayFromString(boardString);
-    this.tableData = this.updateBoard(boardArray); 
-  
-    this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
-
-    if(boardArray.every(x => x === 'w' || x === 'b')) {
-      this.boardFull = true;
-    }
-
-        if(!boardArray.includes('e')) {
-          this.eligibleMoves = false;
-        } 
-
-        if(boardArray.includes('e')) {
-          this.eligibleMoves = true;
-        }
-
-        this.calculateScore();
-    });
-  }
   
 }
