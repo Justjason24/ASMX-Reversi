@@ -1,0 +1,109 @@
+name: Build and Deploy to Azure Container Apps
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  RESOURCE_GROUP: rg-reversi
+  LOCATION: eastus
+  PROJECT_NAME: reversi
+
+jobs:
+  build-and-push:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.tag.outputs.tag }}
+      acr-server: ${{ steps.acr-login.outputs.registry }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate image tag
+        id: tag
+        run: echo "tag=$(echo $GITHUB_SHA | cut -c1-8)" >> $GITHUB_OUTPUT
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get ACR login server
+        id: acr-login
+        run: |
+          ACR_NAME=$(az acr list --resource-group ${{ env.RESOURCE_GROUP }} --query "[0].name" -o tsv)
+          ACR_SERVER=$(az acr show --name $ACR_NAME --query loginServer -o tsv)
+          echo "registry=$ACR_SERVER" >> $GITHUB_OUTPUT
+          az acr login --name $ACR_NAME
+
+      - name: Build and push reversi-api
+        run: |
+          docker build -t ${{ steps.acr-login.outputs.registry }}/reversi-api:${{ steps.tag.outputs.tag }} \
+                       -t ${{ steps.acr-login.outputs.registry }}/reversi-api:latest \
+                       ./ReversiApi
+          docker push ${{ steps.acr-login.outputs.registry }}/reversi-api:${{ steps.tag.outputs.tag }}
+          docker push ${{ steps.acr-login.outputs.registry }}/reversi-api:latest
+
+      - name: Build and push angular-reversi
+        run: |
+          docker build -t ${{ steps.acr-login.outputs.registry }}/angular-reversi:${{ steps.tag.outputs.tag }} \
+                       -t ${{ steps.acr-login.outputs.registry }}/angular-reversi:latest \
+                       ./angular-reversi
+          docker push ${{ steps.acr-login.outputs.registry }}/angular-reversi:${{ steps.tag.outputs.tag }}
+          docker push ${{ steps.acr-login.outputs.registry }}/angular-reversi:latest
+
+  deploy:
+    name: Deploy to Azure Container Apps
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy Bicep infrastructure
+        uses: azure/arm-deploy@v2
+        with:
+          resourceGroupName: ${{ env.RESOURCE_GROUP }}
+          template: ./infra/main.bicep
+          parameters: >
+            projectName=${{ env.PROJECT_NAME }}
+            imageTag=${{ needs.build-and-push.outputs.image-tag }}
+
+      - name: Update reversi-api image
+        run: |
+          az containerapp update \
+            --name ${{ env.PROJECT_NAME }}-api \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image ${{ needs.build-and-push.outputs.acr-server }}/reversi-api:${{ needs.build-and-push.outputs.image-tag }}
+
+      - name: Update angular-reversi image
+        run: |
+          az containerapp update \
+            --name ${{ env.PROJECT_NAME }}-frontend \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image ${{ needs.build-and-push.outputs.acr-server }}/angular-reversi:${{ needs.build-and-push.outputs.image-tag }}
+
+      - name: Print deployed URLs
+        run: |
+          API_URL=$(az containerapp show --name ${{ env.PROJECT_NAME }}-api --resource-group ${{ env.RESOURCE_GROUP }} --query "properties.configuration.ingress.fqdn" -o tsv)
+          FRONTEND_URL=$(az containerapp show --name ${{ env.PROJECT_NAME }}-frontend --resource-group ${{ env.RESOURCE_GROUP }} --query "properties.configuration.ingress.fqdn" -o tsv)
+          echo "API: https://$API_URL"
+          echo "Frontend: https://$FRONTEND_URL"

@@ -64,3 +64,14 @@ Board 2D array added as `board[][]` in response for new frontend code.
 - **Lambert:** Frontend rewired to JSON, AI mode UX complete, environment config (dev/prod) working
 - **Ready for deployment:** Push to `main` triggers GitHub Actions → builds images → pushes to ACR → deploys to Container Apps
 - **Blocking:** GitHub secrets must be configured (AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID)
+
+### 2026-05-15T13:27:42-05:00: Post-Sprint Metadata + Move Validation Fix
+
+**Move validation bug fixed:**
+- Issue: `/api/game/move` accepted invalid moves without validation, returning 200 OK and corrupting board state.
+- Fix: Added server-side validation calling `board.GetValidMoves()` before applying move. Invalid moves now return 400 Bad Request with `{ "error": "Invalid move" }`.
+- Test update: Renamed `Move_InvalidMove_StillReturns200ButNoCapture` to `Move_InvalidMove_Returns400BadRequest` and corrected assertion.
+- **Result:** All 59 tests pass.
+
+**Decision documented:** Merged decision metadata to `.squad/decisions/decisions.md`
+**Orchestration logged:** 2026-05-15T13-27-kane-readme.md records both kane-1 and lambert agent work
