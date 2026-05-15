@@ -28,3 +28,14 @@
 - **Ready:** All 4 endpoints (new, move, ai-move, health) verified; game flow tested with PvP and AI modes; bundle size acceptable (688 KB with Material components)
 - **Deployment:** Ready for Azure Container Apps. GitHub Actions pipeline will trigger on `git push main` once secrets configured.
 - **Game UX:** Human plays Black (first), AI plays White; 3 difficulty levels (Easy/Medium/Hard); 600ms AI thinking delay for visual polish
+
+### 2026-05-15T13:27:42-05:00: README Modernization + Documentation
+
+**README.md rewritten with:**
+- Blog post summary of the modernization journey
+- Squad modernization process documentation
+- Running instructions for dev and prod
+- Clear architecture overview for new developers
+
+**Decision metadata processed:** 1 decision from inbox merged to decisions.md
+**Session orchestration logged:** 2026-05-15T13-27-kane-readme.md with both agent contributions
