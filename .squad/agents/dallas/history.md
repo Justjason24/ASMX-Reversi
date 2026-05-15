@@ -16,3 +16,17 @@
 - Dead code: Person.cs, Helper.cs referenced in .csproj but missing from disk. HelloWorld/AddA/Debug endpoints are test artifacts.
 - The existing nginx.conf in angular-reversi/ is correct for SPA serving but currently unused — the Dockerfile runs npm start instead.
 - Phase execution order: Backend port → API contract → AI + Containerization (parallel) → Frontend update → Azure deploy.
+
+---
+
+## Team Sprint Summary (2026-05-15T18:19:23Z)
+
+**All phases complete** — end-to-end modernization delivered.
+
+**Kane (Backend):** Ported ReversiBoard.cs to .NET 10, fixed eligible-moves and CheckGameOver bugs, implemented minimax AI (3 difficulty levels). Created 4-endpoint REST API with stateless design and CORS support.
+
+**Ash (DevOps):** Updated docker-compose to Linux, rewrote both Dockerfiles (multi-stage), added nginx reverse proxy, wrote complete Bicep infrastructure (ACR + Container Apps + Log Analytics), configured GitHub Actions CI/CD with OIDC.
+
+**Lambert (Frontend):** Rewired from SOAP/XML to JSON REST, implemented game mode selection UI (PvP/AI), added AI opponent integration with difficulty selector, configured environment-specific API endpoints (dev/prod).
+
+**Outcome:** 100% ready for cloud deployment. GitHub Actions pipeline requires secrets (AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID) to execute. No rework needed.

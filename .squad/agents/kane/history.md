@@ -52,3 +52,15 @@ Board 2D array added as `board[][]` in response for new frontend code.
 
 **Build verified:** `dotnet build ReversiApi/` — succeeded, 0 warnings, 0 errors
 **Runtime verified:** all 4 endpoints smoke-tested, eligible moves + flips + AI all correct
+
+---
+
+## Team Sprint Summary (2026-05-15T18:19:23Z)
+
+**Backend complete.** Dallas provided architecture roadmap, Ash containerized the API, Lambert wired frontend to JSON endpoints.
+
+**Remaining team status:**
+- **Ash:** Deployed Bicep infrastructure and GitHub Actions CI/CD; docker-compose tested locally
+- **Lambert:** Frontend rewired to JSON, AI mode UX complete, environment config (dev/prod) working
+- **Ready for deployment:** Push to `main` triggers GitHub Actions → builds images → pushes to ACR → deploys to Container Apps
+- **Blocking:** GitHub secrets must be configured (AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID)

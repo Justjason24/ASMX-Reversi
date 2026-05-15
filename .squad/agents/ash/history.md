@@ -57,3 +57,20 @@
 - `infra/modules/api-app.bicep`
 - `infra/modules/frontend-app.bicep`
 - `.github/workflows/deploy.yml` — CI/CD pipeline
+
+---
+
+## Team Sprint Summary (2026-05-15T18:19:23Z)
+
+**Phases 4+5 complete.** Infrastructure ready for production.
+
+**Remaining team status:**
+- **Kane:** Backend .NET 10 API with minimax AI — all endpoints working and tested
+- **Lambert:** Frontend rewired to JSON REST, AI integration complete, Material UI components added
+- **Ready:** docker-compose tested locally, Bicep validated, CI/CD workflow configured
+- **Next step:** Configure GitHub secrets in repository settings:
+  - `AZURE_CLIENT_ID` (federated credential app registration)
+  - `AZURE_TENANT_ID` (Azure AD tenant)
+  - `AZURE_SUBSCRIPTION_ID` (target subscription)
+  - Then: `git push main` triggers automatic cloud deployment
+- **Note:** First deploy may have CORS circular dependency; if frontend FQDN not resolved on first attempt, two-pass deploy recommended (deploy infra first, then update api-app CORS_ORIGINS with actual frontend URL)
