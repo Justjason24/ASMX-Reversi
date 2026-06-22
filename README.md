@@ -21,7 +21,7 @@ Containerizing the app with Docker proved especially painful since .NET Framewor
 This project was modernized using **GitHub Copilot's Squad framework** — an AI team orchestration system that assigns specialist agents to parallelize development work. The team was cast from the *Alien* universe:
 
 | Agent | Role | Scope |
-|-------|------|-------|
+| ------ | ------ | ------ |
 | **Dallas** | Lead | Architecture, planning, code review |
 | **Lambert** | Frontend Dev | Angular, UI, components |
 | **Kane** | Backend Dev | .NET API, game engine, AI |
@@ -75,6 +75,17 @@ cd angular-reversi
 npm install
 ng serve
 ```
+
+- **Frontend:** http://localhost:4200 (redirects to `/reversi`)
+- **API:** http://localhost:5249
+
+### Routes
+
+| Path | Description |
+|------|-------------|
+| `/` | Redirects to `/reversi` |
+| `/reversi` | Main game board |
+| `**` (wildcard) | Redirects to `/reversi` |
 
 ### Azure Deployment
 
