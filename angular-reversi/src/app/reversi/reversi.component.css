@@ -55,12 +55,7 @@ img {
 
 .scoreboard {
 
-    /* DEBUG STUFF */
-    /* border: 3px;
-    border-color: purple;
-    border-style: dashed; */
     height: 45em;
-    /* display: flex; */
     position: relative;
 }
 
@@ -72,9 +67,6 @@ img {
   padding-left: 1em;
   padding-right: 1em;
   padding-top: .5em;
-
-
-  
 }
 
 .scoreboard-score {
@@ -124,3 +116,102 @@ img {
   transform: scale(0.98);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
+
+/* Setup screen */
+.setup-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  background-color: #2e7d32;
+}
+
+.setup-title {
+  font-family: "Luckiest Guy", cursive;
+  font-size: 5em;
+  color: white;
+  margin-bottom: 0.3em;
+  text-shadow: 2px 4px 6px rgba(0,0,0,0.4);
+}
+
+.setup-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2em 3em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5em;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  min-width: 340px;
+}
+
+.setup-heading {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1.4em;
+  color: #333;
+}
+
+.mode-toggle {
+  width: 100%;
+}
+
+.difficulty-row {
+  width: 100%;
+}
+
+.difficulty-row mat-form-field {
+  width: 100%;
+}
+
+.start-btn {
+  width: 100%;
+  padding: 0.6em 0;
+  font-size: 1.1em;
+}
+
+/* AI thinking banner */
+.ai-thinking-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  background: #1565c0;
+  color: white;
+  padding: 0.6em 1.5em;
+  font-size: 1.2em;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: bold;
+}
+
+.ai-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Game over banner */
+.game-over-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #b71c1c;
+  color: white;
+  padding: 1em 2em;
+  text-align: center;
+}
+
+.reset-btn {
+  margin: 0.5em 1em 0.5em 0;
+}
+

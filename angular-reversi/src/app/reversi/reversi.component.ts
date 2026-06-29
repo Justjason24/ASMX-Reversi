@@ -1,132 +1,118 @@
-import { Component, OnInit } from '@angular/core';
-import { DataserviceService } from '../services/dataservice.service';
-import { MatSlideToggle } from '@angular/material/slide-toggle';
-
+import { Component } from '@angular/core';
+import { DataserviceService, GameState, NewGameRequest, MoveRequest } from '../services/dataservice.service';
 
 @Component({
   selector: 'app-reversi',
   templateUrl: './reversi.component.html',
   styleUrls: ['./reversi.component.css']
 })
-export class ReversiComponent implements OnInit {
+export class ReversiComponent {
 
-  constructor(public dataService: DataserviceService) {}
+  constructor(private dataService: DataserviceService) {}
 
-  activePlayerColor: string = 'b';
-  errorMessage: string = '';
-  eligibleMoves = true;
-  boardFull = false;
+  // Setup state
+  gameStarted = false;
+  gameMode: 'pvp' | 'ai' = 'pvp';
+  difficulty: 'easy' | 'medium' | 'hard' = 'medium';
 
-  whiteScore: number = 2;
-  blackScore: number = 2;
-  showMoveHistory = false;
+  // Game state
+  gameId = '';
+  boardString = '';
+  activePlayerColor = 'b';
   gameOver = false;
+  blackScore = 2;
+  whiteScore = 2;
+  aiThinking = false;
+  showMoveHistory = false;
 
+  tableData: string[][] = this.emptyBoard();
+  moveHistory: { player: string; row: number; col: number }[] = [];
 
-  tableData: any[][] = [
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',],
-    [' ', ' ', ' ', ' ', 'e', ' ', ' ', ' ',],
-    [' ', ' ', ' ', 'b', 'w', 'e', ' ', ' ',],
-    [' ', ' ', 'e', 'w', 'b', ' ', ' ', ' ',],
-    [' ', ' ', ' ', 'e', ' ', ' ', ' ', ' ',],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',]
-  ];
-
-  moveHistory: any[] = [];
-  chunkedMoveHistory: string[][] = [];
-
-  ngOnInit() {
-
-      console.log("test area");
+  private emptyBoard(): string[][] {
+    return Array.from({ length: 8 }, () => Array(8).fill(' '));
   }
 
-
-  onCellClick(playerColor: any, rowNumber: any, columnNumber: any) {
-
-    this.moveHistory.push(playerColor, rowNumber, columnNumber);
-    this.chunkedMoveHistory = [];
-    for(let i = 0; i < this.moveHistory.length; i += 3) {
-      this.chunkedMoveHistory.push(this.moveHistory.slice(i, i + 3));
+  private buildDisplayBoard(state: GameState): string[][] {
+    const display = state.board.map(row => [...row]);
+    for (const move of state.eligibleMoves) {
+      display[move.row][move.col] = 'e';
     }
+    return display;
+  }
 
+  private applyState(state: GameState): void {
+    this.gameId = state.gameId;
+    this.boardString = state.boardString;
+    this.activePlayerColor = state.currentPlayer;
+    this.gameOver = state.gameOver;
+    this.blackScore = state.blackScore;
+    this.whiteScore = state.whiteScore;
+    this.tableData = this.buildDisplayBoard(state);
+  }
 
+  get hasEligibleMoves(): boolean {
+    return this.tableData.some(row => row.includes('e'));
+  }
 
-    this.dataService.postMoveData(playerColor, rowNumber, columnNumber, this.tableData.toString() ).subscribe(
-      (data) => {
+  startNewGame(): void {
+    const request: NewGameRequest = { mode: this.gameMode };
+    if (this.gameMode === 'ai') {
+      request.difficulty = this.difficulty;
+    }
+    this.dataService.newGame(request).subscribe(state => {
+      this.applyState(state);
+      this.moveHistory = [];
+      this.aiThinking = false;
+      this.gameStarted = true;
+    });
+  }
 
-        var boardString = this.getTextBetweenStrings(data, "<BoardString>", "</BoardString>");
+  resetGame(): void {
+    this.gameStarted = false;
+    this.gameOver = false;
+    this.aiThinking = false;
+    this.tableData = this.emptyBoard();
+    this.moveHistory = [];
+  }
 
-        var boardArray = this.createBoardArrayFromString(boardString);
-        this.tableData = this.updateBoard(boardArray); 
-  
-        this.activePlayerColor = this.getTextBetweenStrings(data, "<CurrentPlayerColor>", "</CurrentPlayerColor>");
-        // console.log("Is game over? " + this.getTextBetweenStrings(data, "<GameOver>", "</GameOver>"));
+  onCellClick(playerColor: string, rowNumber: number, columnNumber: number): void {
+    if (this.aiThinking || this.gameOver) return;
 
-        if(boardArray.every(x => x === 'w' || x === 'b')) {
-          this.boardFull = true;
-        }
+    this.moveHistory.push({ player: playerColor, row: rowNumber, col: columnNumber });
 
-        if(!boardArray.includes('e')) {
-          this.eligibleMoves = false;
-        } 
+    const moveRequest: MoveRequest = {
+      gameId: this.gameId,
+      boardString: this.boardString,
+      currentPlayer: playerColor,
+      moveRow: rowNumber,
+      moveCol: columnNumber
+    };
 
-        if(boardArray.includes('e')) {
-          this.eligibleMoves = true;
-        }
-
-        this.calculateScore();
-        console.log(this.getTextBetweenStrings(data, "GameOver>", "</GameOver>"));
-
-        if(this.getTextBetweenStrings(data, "<GameOver>", "</GameOver>") === "true")
-        {
-          this.gameOver = true;
-        }
+    this.dataService.postMove(moveRequest).subscribe(state => {
+      this.applyState(state);
+      if (!state.gameOver && this.gameMode === 'ai' && state.currentPlayer !== 'b') {
+        this.triggerAiMove(state);
       }
-    );
+    });
   }
 
-
-  createBoardArrayFromString(gameDataString: string) {
-      var boardArray = gameDataString.split(",");
-      boardArray.pop(); // remove the last element
-      return boardArray;
+  private triggerAiMove(state: GameState): void {
+    this.aiThinking = true;
+    setTimeout(() => {
+      this.dataService.aiMove({
+        gameId: state.gameId,
+        boardString: state.boardString,
+        currentPlayer: state.currentPlayer,
+        difficulty: this.difficulty
+      }).subscribe(aiState => {
+        this.applyState(aiState);
+        this.aiThinking = false;
+        // If after AI move the human still can't play (AI goes again), recurse
+        if (!aiState.gameOver && this.gameMode === 'ai' && aiState.currentPlayer !== 'b') {
+          this.triggerAiMove(aiState);
+        }
+      });
+    }, 600);
   }
-
-
-  getTextBetweenStrings(fullString: string, startString: string, endString: string) {
-    const startIndex = fullString.indexOf(startString);
-
-    const contentStartIndex = startIndex + startString.length;
-    const endIndex = fullString.indexOf(endString, contentStartIndex);
-
-
-    return fullString.substring(contentStartIndex, endIndex);
-  }
-
-  updateBoard(arr: string[]) {
-
-      var numColumns = Math.sqrt(arr.length);
-      const numRows = Math.ceil(arr.length / numColumns);
-      var result: any[][] = [];
-
-      for (let i = 0; i < numRows; i++) {
-        const startIndex = i * numColumns;
-        const endIndex = startIndex + numColumns;
-
-        result.push(arr.slice(startIndex, endIndex));
-      }
-
-      return result;
-
-  }
-
-  calculateScore() {
-    this.whiteScore = this.tableData.flat().filter(x => x === 'w').length;
-    this.blackScore = this.tableData.flat().filter(x => x === 'b').length;
-  }
-
-
-  
 }
+

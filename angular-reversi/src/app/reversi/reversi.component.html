@@ -1,70 +1,101 @@
+<!-- Game Setup Screen -->
+<div *ngIf="!gameStarted" class="setup-screen">
+  <h1 class="setup-title">Reversi</h1>
 
-<div *ngIf ="gameOver" class="game-over-banner">
-    <h1>Game Over!</h1>
-    <h2 *ngIf="blackScore > whiteScore">Black Wins! {{blackScore}} to {{whiteScore}}</h2>
-    <h2 *ngIf="whiteScore > blackScore">White Wins! {{blackScore}} to {{whiteScore}}</h2>
-    <h2 *ngIf="whiteScore == blackScore">It's a Tie! {{blackScore}} to {{whiteScore}}</h2>
+  <div class="setup-card">
+    <h2 class="setup-heading">Game Mode</h2>
+    <mat-button-toggle-group [(ngModel)]="gameMode" aria-label="Game Mode" class="mode-toggle">
+      <mat-button-toggle value="pvp">Player vs Player</mat-button-toggle>
+      <mat-button-toggle value="ai">Player vs AI</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <div *ngIf="gameMode === 'ai'" class="difficulty-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Difficulty</mat-label>
+        <mat-select [(ngModel)]="difficulty">
+          <mat-option value="easy">Easy</mat-option>
+          <mat-option value="medium">Medium</mat-option>
+          <mat-option value="hard">Hard</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" class="start-btn" (click)="startNewGame()">
+      Start Game
+    </button>
+  </div>
 </div>
 
 
-<div class="game-area">
+<!-- Game Screen -->
+<div *ngIf="gameStarted">
+
+  <div *ngIf="gameOver" class="game-over-banner">
+    <h1>Game Over!</h1>
+    <h2 *ngIf="blackScore > whiteScore">Black Wins! {{blackScore}} to {{whiteScore}}</h2>
+    <h2 *ngIf="whiteScore > blackScore">White Wins! {{whiteScore}} to {{blackScore}}</h2>
+    <h2 *ngIf="whiteScore === blackScore">It's a Tie! {{blackScore}} to {{whiteScore}}</h2>
+    <button mat-raised-button color="accent" (click)="resetGame()">New Game</button>
+  </div>
+
+  <div *ngIf="aiThinking" class="ai-thinking-banner">
+    <span class="ai-spinner"></span> AI is thinking…
+  </div>
+
+  <div class="game-area">
 
     <div class="scoreboard">
-        <h2 class="scoreboard-label" [ngClass]=" { 'active-player-border' : activePlayerColor == 'b'} "
-            style="color: black;">Black</h2>
-        <h3 class="scoreboard-score" style="color: black;">{{blackScore}}</h3>
+      <h2 class="scoreboard-label" [ngClass]="{'active-player-border': activePlayerColor === 'b'}"
+          style="color: black;">Black</h2>
+      <h3 class="scoreboard-score" style="color: black;">{{blackScore}}</h3>
     </div>
 
     <div class="board">
-        <table [class.unclickable]="!eligibleMoves">
-            <tr *ngFor="let row of tableData; let i = index">
-                <td *ngFor="let cell of row; let j = index">
+      <table [class.unclickable]="!hasEligibleMoves || aiThinking || gameOver">
+        <tr *ngFor="let row of tableData; let i = index">
+          <td *ngFor="let cell of row; let j = index">
 
-                    
-                    <div class="board-piece" *ngIf="cell == 'b'">
-                        <!-- {{cell}} this displays the data in tabledata -->
-                        <img src="../../assets/black_reversi.png">
-                    </div>
+            <div class="board-piece" *ngIf="cell === 'b'">
+              <img src="../../assets/black_reversi.png">
+            </div>
 
-                    <div class="board-piece" *ngIf="cell == 'w'">
-                        <img src="../../assets/white_reversi.png">
-                    </div>
+            <div class="board-piece" *ngIf="cell === 'w'">
+              <img src="../../assets/white_reversi.png">
+            </div>
 
-                    <div class="board-piece" *ngIf="cell == 'e'" (click)="onCellClick(activePlayerColor, i, j)">
-                        <img src="../../assets/eligable_move.png">
-                    </div>
-                </td>
-            </tr>
-        </table>
+            <div class="board-piece" *ngIf="cell === 'e'" (click)="onCellClick(activePlayerColor, i, j)">
+              <img src="../../assets/eligable_move.png">
+            </div>
+
+          </td>
+        </tr>
+      </table>
     </div>
 
     <div class="scoreboard">
-        <h2 class="scoreboard-label" [ngClass]=" { 'active-player-border' : activePlayerColor == 'w'} "
-            style="color: white;">White</h2>
-        <h3 class="scoreboard-score" style="color: white;">{{whiteScore}}</h3>
+      <h2 class="scoreboard-label" [ngClass]="{'active-player-border': activePlayerColor === 'w'}"
+          style="color: white;">White</h2>
+      <h3 class="scoreboard-score" style="color: white;">{{whiteScore}}</h3>
 
-
-        <button *ngIf="!eligibleMoves && !gameOver" class="ineligible-move-card" (click)="onCellClick(activePlayerColor, -1, -1)">No elgible moves for {{activePlayerColor}} - click below to go to next player.</button>
-
+      <button *ngIf="!hasEligibleMoves && !gameOver && !aiThinking"
+              class="ineligible-move-card"
+              (click)="onCellClick(activePlayerColor, -1, -1)">
+        No eligible moves for {{activePlayerColor === 'b' ? 'Black' : 'White'}} — click to pass.
+      </button>
     </div>
 
-</div>
+  </div>
 
+  <div footer>
+    <button mat-button (click)="resetGame()" class="reset-btn">↩ New Game</button>
 
-<div footer>
     <mat-slide-toggle [(ngModel)]="showMoveHistory">Enable move history</mat-slide-toggle>
 
     <div *ngIf="showMoveHistory" id="move-history">
-        <div *ngFor="let move of chunkedMoveHistory">
-            <p>{{move}}</p>
-        </div>
+      <div *ngFor="let move of moveHistory; let idx = index">
+        <p>{{idx + 1}}. {{move.player === 'b' ? 'Black' : 'White'}} → row {{move.row}}, col {{move.col}}</p>
+      </div>
     </div>
+  </div>
 
 </div>
-
-
-
-
-<!-- <div>
-    <button  (click)="debugAPICall()">Debug board</button>
-</div> -->
